@@ -13,35 +13,64 @@ interface FAQProps {
 
 const FAQList: FAQProps[] = [
   {
-    question: "Is this template free?",
-    answer: "Yes. It is a free ChadcnUI template.",
+    question: "O que é a contabilidade online?",
+    answer: "	A contabilidade online foi desenvolvida para facilitar a vida do empresário, mantendo-o sempre em contato com a contabilidade responsável pelos trabalhos da sua empresa, tendo sua empresa sempre regular a operar suas rotinas, dando segurança e economia ao empresário no dia a dia.",
     value: "item-1",
   },
   {
-    question: "Lorem ipsum dolor sit amet consectetur adipisicing elit?",
+    question: "Quais os serviços de uma contabilidade online?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.",
+      "Os serviços são os mesmos da sua contabilidade física, mas gerando uma economia no valor cobrado e segurança de fazer tudo sem sair de casa.",
     value: "item-2",
   },
   {
     question:
-      "Lorem ipsum dolor sit amet  Consectetur natus dolores minus quibusdam?",
+      "Quanto custa ter minha empresa em uma contabilidade online?",
     answer:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore qui nostrum reiciendis veritatis necessitatibus maxime quis ipsa vitae cumque quo?",
+      "Em média custa 50% (cinquenta porcento) da sua contabilidade física e ainda terá serviços e facilidade em gerir seu negocio de forma simples e fácil. ",
     value: "item-3",
   },
   {
-    question: "Lorem ipsum dolor sit amet, consectetur adipisicing elit?",
-    answer: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
+    question: "Posso trocar de contador em qual momento?",
+    answer: "A troca de serviços contábeis poderá ser feita a qualquer momento, não precisando esperar o ano calendário terminar, converse com um especialista IA que passarão todos os cronogramas de troca de contabilidade. ",
     value: "item-4",
   },
   {
     question:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur natus?",
+      "Como seria abrir CNPJ grátis?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.",
+      "	Nossa equipe fará a abertura total da sua empresa de forma gratuita, apenas a taxa da Junta Comercial do estado que será paga pelo empresário na hora da abertura, essa taxa varia de valor dependendo do estado de abertura.",
     value: "item-5",
   },
+  {
+    question:
+      "Transformação MEI em ME grátis?",
+    answer:
+      "	Sim, faremos a transformação da sua empresa de forma gratuita, apenas a taxa da Junta Comercial do estado que será paga pelo empresário na hora da transformação, essa taxa varia de valor dependendo do estado de abertura.",
+    value: "item-6",
+  },
+  {
+    question:
+      "Quais os beneficio de escolher a IA App Contábil?",
+    answer:
+      "Com nosso aplicativo ou site, poderá fazer a gestão da sua empresa de qualquer lugar, de uma forma simples e fácil. Toda sua empresa na palma de sua mão.      ",
+    value: "item-7",
+  },
+  {
+    question:
+      "O que a IA App Contábil oferece?",
+    answer:
+      "	Com nosso software, desenvolvido por uma equipe que entende a necessidade de ser um empresário no Brasil, trouxemos de forma simples e fácil a gestão do seu negócio, oferecendo em nossa plataforma a parte fiscal, pessoal, gerencial e contábil da sua empresa.",
+    value: "item-8",
+  },
+  {
+    question:
+      "Qual diferencial da IA App Contábil para as demais empresas de contabilidade online?",
+    answer:
+      "Desenvolvida para fazer sua contabilidade de forma simples, de fácil entendimento e compreensão, tendo tudo que precisa a qualquer momento, pois o nosso foco é trazer clareza ao seu negócio, onde e quando quiser na palma de sua mão. (celular, tablet ou notebook)",
+    value: "item-9",
+  },
+  
 ];
 
 export const FAQ = () => {
