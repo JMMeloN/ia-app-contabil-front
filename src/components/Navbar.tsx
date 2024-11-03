@@ -17,6 +17,7 @@ import { LogIn, Menu } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import logo from "../assets/logotipo-mono.png";
 import logoWhite from "../assets/logo-white.png";
+import { useNavigate } from "react-router-dom";
 
 interface RouteProps {
   href: string;
@@ -40,6 +41,7 @@ const routeList: RouteProps[] = [
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const navigete = useNavigate()
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
       <NavigationMenu className="mx-auto">
@@ -114,7 +116,7 @@ export const Navbar = () => {
           </nav>
 
           <div className="hidden md:flex gap-2">
-            <Button size="sm" variant="outline" className="flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => navigete('/sign-in')} className="flex gap-2">
              <LogIn className="w-4 h-4" /> Entrar 
             </Button>
           </div>
