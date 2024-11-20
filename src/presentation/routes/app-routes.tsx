@@ -5,11 +5,12 @@ import { Landing } from "../pages/public/landing";
 import { SignUp } from "../pages/public/sign-up";
 import { RecoverPassword } from "../pages/public/recover-password";
 import PrivateRoute from "./private-routes";
-import { Home } from "../pages/intern/home";
+import { CreateNote } from "../pages/intern/nota-fiscal/create";
 import Layout from "../components/layout/sidebar-provider";
+import { ListNotes } from "../pages/intern/nota-fiscal/list";
 
 const AppRoutes = () => {
-  const isAuthenticated = true
+  const isAuthenticated = true;
 
   return (
     <Routes>
@@ -18,16 +19,27 @@ const AppRoutes = () => {
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/recover-password" element={<RecoverPassword />} />
 
-       <Route
-        path="/home"
+      <Route
+        path="/create-note"
         element={
           <PrivateRoute isAuthenticated={isAuthenticated}>
             <Layout>
-            <Home />
+              <CreateNote />
             </Layout>
           </PrivateRoute>
         }
-      /> 
+      />
+
+      <Route
+        path="/list-notes"
+        element={
+          <PrivateRoute isAuthenticated={isAuthenticated}>
+            <Layout>
+              <ListNotes />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 };

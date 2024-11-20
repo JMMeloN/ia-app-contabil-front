@@ -13,40 +13,16 @@ import {
 
 // Menu items.
 const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
+ 
   {
     title: "Emissão de nota",
-    url: "#",
+    url: "/create-note",
     icon: Inbox,
   },
   {
-    title: "Fiscal",
-    url: "#",
+    title: "Notas fiscais",
+    url: "/list-notes",
     icon: Calendar,
-  },
-  {
-    title: "Departamento pessoa",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Contábil",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Processo",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Configurações",
-    url: "#",
-    icon: Settings,
   },
 ]
 
