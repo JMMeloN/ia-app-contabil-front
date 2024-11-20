@@ -5,7 +5,6 @@ import logoWhite from "../../../../../assets/logo-white.png";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
