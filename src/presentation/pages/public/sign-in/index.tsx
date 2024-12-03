@@ -8,12 +8,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Navbar } from "../../../components/layout/header";
-
+import { signInWithPopup } from "firebase/auth";
+import {auth, googleProvider} from '../../../../firebase/firebase'
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useEffect } from "react";
+import icoGoogle from '../../../../assets/ico-google.png'
 export function SignIn() {
   const navigate = useNavigate()
+  console.log(auth)
+  useEffect(() => {
+    if (auth.currentUser) {
+      navigate("/home");
+    }
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      navigate("/home");
+    } catch (error) {
+      console.error("Erro ao fazer login com Google: ", error);
+    }
+  };
 
   return (
     <div>
@@ -46,6 +63,9 @@ export function SignIn() {
             </div>
 
             <Button className="w-full mt-6" onClick={() => navigate('/home')}>Entrar</Button>
+            <Button className="w-full mt-4 gap-2" type="button" variant="outline" onClick={handleGoogleLogin}>
+              <img className="w-4 h-4" src={icoGoogle} alt="" />
+              Login com Google</Button>
 
            
           </form>
