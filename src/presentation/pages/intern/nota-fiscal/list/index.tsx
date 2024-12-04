@@ -21,10 +21,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Ban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { auth } from "@/firebase/firebase";
+import { signOut } from "firebase/auth";
 
 export function ListNotes() {
   const navigate = useNavigate()
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      alert("Desconectado com sucesso!");
+      navigate("/sign-in"); // Redireciona para a página de login após o logout
+    } catch (error: any) {
+      console.error("Erro ao fazer logout: ", error.message);
+    }
+  };
   return (
     <div className="w-full  ">
       <div className="border-b w-full h-[60px] relative flex items-center justify-center">
@@ -48,6 +59,11 @@ export function ListNotes() {
             Contabil
           </a>
         </div>
+        {auth.currentUser && (
+        <Button className=" mt-4" variant="destructive" onClick={handleLogout}>
+          Sair
+        </Button>
+      )}
       </div>
       <div className="p-4">
         <div>
