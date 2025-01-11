@@ -26,7 +26,7 @@ export function SignUp() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert('Usuário registrado com sucesso!');
-      navigate('/login'); // Redireciona para a página de login após o registro
+      navigate('/sign-in'); // Redireciona para a página de login após o registro
     } catch (error: any) {
       setError('Erro ao registrar o usuário: ' + error.message);
       console.error("Erro ao registrar o usuário:", error.message);

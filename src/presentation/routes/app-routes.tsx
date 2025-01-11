@@ -1,4 +1,3 @@
-// src/routes/AppRoutes.jsx
 import { Routes, Route } from "react-router-dom";
 import { SignIn } from "../pages/public/sign-in";
 import { Landing } from "../pages/public/landing";
@@ -10,8 +9,6 @@ import Layout from "../components/layout/sidebar-provider";
 import { ListNotes } from "../pages/intern/nota-fiscal/list";
 
 const AppRoutes = () => {
-  const isAuthenticated = true;
-
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
@@ -22,7 +19,7 @@ const AppRoutes = () => {
       <Route
         path="/create-note"
         element={
-          <PrivateRoute isAuthenticated={isAuthenticated}>
+          <PrivateRoute>
             <Layout>
               <CreateNote />
             </Layout>
@@ -33,7 +30,7 @@ const AppRoutes = () => {
       <Route
         path="/list-notes"
         element={
-          <PrivateRoute isAuthenticated={isAuthenticated}>
+          <PrivateRoute>
             <Layout>
               <ListNotes />
             </Layout>
