@@ -54,7 +54,7 @@ export const Navbar = () => {
             >
               <img src={logo} className="max-w-[40px] h-auto block dark:hidden" alt="" />
               <img src={logoWhite} className="max-w-[40px] h-auto hidden dark:block" alt="" />
-               Contabil
+               App Contabil
             </a>
           </NavigationMenuItem>
 

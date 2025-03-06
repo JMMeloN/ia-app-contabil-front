@@ -24,7 +24,7 @@ export const About = () => {
                 <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
                   Sobre{" "}
                 </span>
-                a IA Contabil
+                a IA App Contabil
               </h2>
               <p className="text-xl text-muted-foreground mt-4">
                 Somos uma contabilidade simples, criada para facilitar os

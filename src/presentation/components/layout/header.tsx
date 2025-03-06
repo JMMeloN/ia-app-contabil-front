@@ -29,7 +29,7 @@ export const Navbar = () => {
                 className="max-w-[40px] h-auto hidden dark:block"
                 alt=""
               />
-              Contabil
+              App Contabil
             </a>
 
            

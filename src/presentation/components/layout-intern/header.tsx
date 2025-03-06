@@ -39,7 +39,7 @@ export function HeaderIntern() {
             className="max-w-[40px] h-auto hidden dark:block"
             alt=""
           />
-          Contabil
+          App Contabil
         </a>
       </div>
       {auth.currentUser && (

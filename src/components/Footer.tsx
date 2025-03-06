@@ -14,15 +14,15 @@ export const Footer = () => {
           >
             <img
               src={logo}
-              className="max-w-[40px] h-auto block dark:hidden"
+              className="max-w-[70px] h-auto block dark:hidden"
               alt=""
             />
             <img
               src={logoWhite}
-              className="max-w-[40px] h-auto hidden dark:block"
+              className="max-w-[70px] h-auto hidden dark:block"
               alt=""
             />
-            Contabil
+            App Contabil
           </a>
         </div>
 
@@ -132,7 +132,7 @@ export const Footer = () => {
       </section>
 
       <section className="container pb-14 text-center">
-        <h3>&copy; 2024 IA Contabil</h3>
+        <h3>&copy; 2024 IA App Contabil</h3>
       </section>
     </footer>
   );
