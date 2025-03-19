@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// eslint-disable @typescript-eslint/ban-ts-comment
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"; // Certifique-se de importar corretamente
 import { z } from "zod";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "@/firebase/firebase";
+import { auth, db } from "@/firebase/firebase";
 import { HeaderIntern } from "@/presentation/components/layout-intern/header";
 
 // Esquema de validação com Zod
@@ -31,8 +33,8 @@ const schema = z.object({
 
 export function CreateNote() {
   const navigate = useNavigate();
+  const usuario = auth.currentUser; // Pega o usuário logado
 
-  // Inicialização do React Hook Form com validação do Zod
   const {
     register,
     handleSubmit,
@@ -42,60 +44,70 @@ export function CreateNote() {
   });
 
   const onSubmit = async (data: any) => {
-    try {
-      const docRef = await addDoc(collection(db, "requests-notes"), data);
-      console.log("Documento enviado com sucesso! ID: ", docRef.id);
-      alert("Nota fiscal criada com sucesso!");
-      navigate("/list-notes");
-    } catch (error) {
-      console.error("Erro ao enviar documento: ", error);
-      alert("Erro ao criar a nota fiscal. Tente novamente.");
+  try {
+    if (!usuario) {
+      alert("Usuário não logado. Por favor, faça login.");
+      return;
     }
-  };
+
+    const noteData = {
+      idUser: usuario.uid, 
+      documento: data.documento,
+      inscricao_municipal: data.inscricao_municipal || "",
+      razao_social: data.razao_social,
+      descricao: data.descricao,
+      telefone: data.telefone,
+      email: data.email,
+      desconto: data.desconto || "",
+      pagamento_forma: data.pagamento_forma || "",
+      valor_liquido: data.valor_liquido,
+      valor_nota: data.valor_nota,
+      cep: data.cep,
+      endereco: data.endereco,
+      numero: data.numero,
+      status: 'Emitida',
+      complemento: data.complemento || "",
+    };
+
+    const docRef = await addDoc(collection(db, `users/${usuario.uid}/notes`), noteData);
+
+    console.log("Documento enviado com sucesso! ID: ", docRef.id);
+    alert("Nota fiscal criada com sucesso!");
+    navigate("/list-notes"); 
+  } catch (error) {
+    console.error("Erro ao enviar documento: ", error);
+    alert("Erro ao criar a nota fiscal. Tente novamente.");
+  }
+};
+
+
   return (
     <div className="w-full">
       <HeaderIntern />
 
       <div className="p-4">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="py-4 flex flex-col gap-4 w-full"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="py-4 flex flex-col gap-4 w-full">
           <Card>
             <CardHeader>
               <CardTitle>
-                <strong className="text-sm">
-                  Quem vai receber sua nota fiscal?
-                </strong>
+                <strong className="text-sm">Quem vai receber sua nota fiscal?</strong>
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col py-4 gap-4 w-full">
               <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
                 {[
-                  {
-                    label: "Cpf / Cnpj",
-                    name: "documento",
-                    placeholder: "000.000.000-00",
-                  },
-                  {
-                    label: "Inscrição Municipal",
-                    name: "inscricao_municipal",
-                  },
-                  {
-                    label: "Razão Social",
-                    name: "razao_social",
-                  },
+                  { label: "Cpf / Cnpj", name: "documento", placeholder: "000.000.000-00" },
+                  { label: "Inscrição Municipal", name: "inscricao_municipal" },
+                  { label: "Razão Social", name: "razao_social" },
                 ].map((field) => (
                   <div key={field.name}>
                     <Label>{field.label}</Label>
-                    <Input
-                      {...register(field.name)}
-                      placeholder={field.placeholder}
-                    />
+                    <Input {...register(field.name)} placeholder={field.placeholder} />
                     {errors[field.name] && (
                       <span className="text-red-500 text-sm">
-                        {errors[field.name]?.message as string}
-                      </span>
+                         {/* @ts-expect-error */}
+                        {errors[field.name]?.message}
+                        </span>
                     )}
                   </div>
                 ))}
@@ -111,8 +123,9 @@ export function CreateNote() {
                     <Input {...register(field.name)} />
                     {errors[field.name] && (
                       <span className="text-red-500 text-sm">
-                        {errors[field.name]?.message as string}
-                      </span>
+                         {/* @ts-expect-error */}
+                        {errors[field.name]?.message}
+                        </span>
                     )}
                   </div>
                 ))}
@@ -133,13 +146,9 @@ export function CreateNote() {
             </CardHeader>
             <CardContent>
               {/* Valores */}
-
               <div className="flex gap-4 w-full">
                 {[
-                  {
-                    label: "Qual foi o desconto aplicado?",
-                    name: "desconto",
-                  },
+                  { label: "Qual foi o desconto aplicado?", name: "desconto" },
                   { label: "Forma de pagamento", name: "pagamento_forma" },
                   { label: "Valor líquido da nota", name: "valor_liquido" },
                   { label: "Valor da nota", name: "valor_nota" },
@@ -149,8 +158,9 @@ export function CreateNote() {
                     <Input {...register(field.name)} />
                     {errors[field.name] && (
                       <span className="text-red-500 text-sm">
-                        {errors[field.name]?.message as string}
-                      </span>
+                         {/* @ts-expect-error */}
+                        {errors[field.name]?.message}
+                        </span>
                     )}
                   </div>
                 ))}
@@ -159,7 +169,6 @@ export function CreateNote() {
           </Card>
 
           {/* Endereço */}
-
           <Card>
             <CardHeader>
               <CardTitle>
@@ -180,15 +189,18 @@ export function CreateNote() {
                     <Label>{field.label}</Label>
                     <Input {...register(field.name)} />
                     {errors[field.name] && (
+
                       <span className="text-red-500 text-sm">
-                        {errors[field.name]?.message as string}
-                      </span>
+                         {/* @ts-expect-error */}
+                        {errors[field.name]?.message}
+                        </span>
                     )}
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
+
           {/* Botões */}
           <div className="flex gap-4 mt-6 ml-auto w-full justify-end">
             <Button
