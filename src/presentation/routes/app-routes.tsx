@@ -7,6 +7,8 @@ import PrivateRoute from "./private-routes";
 import { CreateNote } from "../pages/intern/nota-fiscal/create";
 import Layout from "../components/layout/sidebar-provider";
 import { ListNotes } from "../pages/intern/nota-fiscal/list";
+import { CompanyManagement } from "../pages/intern/nota-fiscal/create-company";
+import { Dashboard } from "../pages/intern/dashboard";
 
 const AppRoutes = () => {
   return (
@@ -15,6 +17,16 @@ const AppRoutes = () => {
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/recover-password" element={<RecoverPassword />} />
+      <Route
+        path="/company-management"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <CompanyManagement />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
 
       <Route
         path="/create-note"
@@ -22,6 +34,17 @@ const AppRoutes = () => {
           <PrivateRoute>
             <Layout>
               <CreateNote />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <Dashboard />
             </Layout>
           </PrivateRoute>
         }

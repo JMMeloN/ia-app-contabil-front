@@ -26,7 +26,7 @@ export function HeaderIntern() {
       <div>
         <a
           rel="noreferrer noopener"
-          href="/home"
+          href="/dashboard"
           className="ml-2 gap-2 font-bold text-xl flex"
         >
           <img
