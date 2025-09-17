@@ -241,9 +241,9 @@ export function RequestedNotesFilters({
         <div className="space-y-2">
           <Label>Anexos</Label>
           <Select
-            value={filtros.temAnexos === undefined ? "" : filtros.temAnexos.toString()}
+            value={filtros.temAnexos === undefined ? "todos" : filtros.temAnexos.toString()}
             onValueChange={(value) => {
-              if (value === "") {
+              if (value === "todos") {
                 onFiltrosChange({ ...filtros, temAnexos: undefined });
               } else {
                 onFiltrosChange({ ...filtros, temAnexos: value === "true" });
@@ -254,7 +254,7 @@ export function RequestedNotesFilters({
               <SelectValue placeholder="Todas as notas" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todas as notas</SelectItem>
+              <SelectItem value="todos">Todas as notas</SelectItem>
               <SelectItem value="true">Com anexos</SelectItem>
               <SelectItem value="false">Sem anexos</SelectItem>
             </SelectContent>
