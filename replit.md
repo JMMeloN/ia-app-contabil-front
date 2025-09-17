@@ -22,7 +22,7 @@ This is a Brazilian accounting management system (Sistema de gerenciamento de co
 - `src/types/` - TypeScript type definitions
 - `src/presentation/` - Application-specific components, pages, and routes
   - `pages/public/` - Public pages (landing, sign-in, sign-up, etc.)
-  - `pages/intern/` - Protected pages (dashboard, invoice management)
+  - `pages/intern/` - Protected pages (dashboard, invoice management, requested notes)
   - `components/layout/` - Layout components and providers
   - `routes/` - Route configuration and protection
 - `src/firebase/` - Firebase configuration and services
@@ -33,6 +33,13 @@ This is a Brazilian accounting management system (Sistema de gerenciamento de co
 - Landing page
 - Company management
 - Invoice (nota fiscal) creation and listing
+- **Comprehensive requested notes management system** with:
+  - Advanced filtering and search with date ranges
+  - Status management and priority tracking
+  - Attachments handling with upload/download capabilities
+  - Detailed note tracking with history and comments
+  - Modal-based interface for complete note information
+  - Pagination and bulk operations
 - Protected routes for authenticated users
 - Responsive design with dark/light theme support
 
@@ -47,6 +54,8 @@ This is a Brazilian accounting management system (Sistema de gerenciamento de co
 - Serves static files from `dist/` directory
 
 ## Recent Improvements (September 17, 2025)
+
+### Phase 1: Core Architecture
 - **Recoil Integration**: Completely migrated from Context API to Recoil for better state management
 - **Enhanced Componentization**: Refactored large Dashboard component into smaller, reusable components:
   - DashboardHeader: Welcome message and action buttons
@@ -59,13 +68,47 @@ This is a Brazilian accounting management system (Sistema de gerenciamento de co
 - **Data Normalization**: Added compatibility layer for legacy Firebase documents
 - **Performance**: Fixed infinite re-render issues with properly memoized functions
 
+### Phase 2: Requested Notes Management System
+- **Comprehensive TypeScript Types**: Created complete type definitions for RequestedNotes ecosystem
+- **Advanced State Management**: Extended Recoil architecture with specialized atoms and selectors for:
+  - Notes data management with filtering and pagination
+  - Attachments handling with upload progress tracking
+  - Status management and priority systems
+  - History tracking and comments functionality
+  - Modal state and user interactions
+- **Rich Component Library**: Built specialized UI components:
+  - RequestedNotesFilters: Advanced filtering with date pickers and status selectors
+  - RequestedNotesTable: Paginated table with actions and bulk operations
+  - StatusManager: Comprehensive status workflow management
+  - AttachmentsManager: File upload/download with progress tracking
+  - RequestedNoteDetailModal: Full-featured modal with tabbed interface
+- **Integration**: Added routes, navigation, and Firebase persistence
+- **User Experience**: Implemented Brazilian Portuguese localization with date-fns
+
 ## Current State
-- Dependencies installed and working
+- Dependencies installed and working (including date-fns, shadcn/ui components)
 - Development server configured and running
 - Recoil state management fully implemented and tested
 - Dashboard componentization completed
+- **Requested notes management system fully implemented** with:
+  ✅ Complete TypeScript type definitions
+  ✅ Recoil state management integration
+  ✅ UI components with advanced filtering and pagination
+  ✅ Status management and attachments handling
+  ✅ Modal-based detailed interface
+  ✅ Navigation and routing integration
+  🚧 Export functionality (Excel/PDF) - pending implementation
+  🚧 Full attachments persistence with Firebase Storage - pending
+  🚧 Notifications system - basic structure in place
 - Ready for development and deployment
 - Firebase integration configured but may need API keys for full functionality
+
+## Technical Debt & Next Steps
+1. **Complete Export Functionality**: Implement Excel/PDF export from filtered data
+2. **Enhanced Attachments**: Full Firebase Storage integration for file versioning
+3. **Notifications System**: Complete notification sending/receiving functionality
+4. **Performance Optimization**: Consider virtualization for large datasets
+5. **Testing**: Add comprehensive test coverage for new components
 
 ## Date
 Last updated: September 17, 2025
