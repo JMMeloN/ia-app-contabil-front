@@ -21,7 +21,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   DropdownMenu,
@@ -46,7 +45,6 @@ import { ptBR } from "date-fns/locale";
 import { AnexoNota } from '@/types';
 
 interface AttachmentsManagerProps {
-  notaId: string;
   anexos: AnexoNota[];
   onUploadFile: (file: File, descricao?: string) => Promise<void>;
   onRemoveFile: (anexoId: string) => Promise<void>;
@@ -97,7 +95,6 @@ const formatDate = (dateString: string) => {
 };
 
 export function AttachmentsManager({
-  notaId,
   anexos,
   onUploadFile,
   onRemoveFile,
@@ -303,7 +300,7 @@ export function AttachmentsManager({
         {/* Dialog de confirmação para remoção */}
         <AlertDialog 
           open={!!anexoParaRemover} 
-          onOpenChange={(open) => !open && setAnexoParaRemover(null)}
+          onOpenChange={(open: boolean) => !open && setAnexoParaRemover(null)}
         >
           <AlertDialogContent>
             <AlertDialogHeader>
