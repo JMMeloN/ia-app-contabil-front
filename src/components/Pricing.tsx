@@ -144,7 +144,14 @@ export const Pricing = () => {
             </CardHeader>
 
             <CardContent>
-              <Button className="w-full">{pricing.buttonText}</Button>
+              <a 
+                href={`https://wa.me/5561996027208?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20o%20plano%20${pricing.title}%20de%20R$${pricing.price}/mês`}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block w-full"
+              >
+                <Button className="w-full">{pricing.buttonText}</Button>
+              </a>
             </CardContent>
 
             <hr className="w-4/5 m-auto mb-4" />
