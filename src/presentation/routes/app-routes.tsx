@@ -9,6 +9,7 @@ import Layout from "../components/layout/sidebar-provider";
 import { ListNotes } from "../pages/intern/nota-fiscal/list";
 import { CompanyManagement } from "../pages/intern/nota-fiscal/create-company";
 import { Dashboard } from "../pages/intern/dashboard";
+import { RequestedNotesPage } from "../pages/intern/requested-notes";
 
 const AppRoutes = () => {
   return (
@@ -56,6 +57,17 @@ const AppRoutes = () => {
           <PrivateRoute>
             <Layout>
               <ListNotes />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/requested-notes"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <RequestedNotesPage />
             </Layout>
           </PrivateRoute>
         }

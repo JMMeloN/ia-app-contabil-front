@@ -1,4 +1,4 @@
-import { Calendar,  Inbox } from "lucide-react"
+import { Calendar, Inbox, FileText } from "lucide-react"
 
 import {
   Sidebar,
@@ -13,7 +13,6 @@ import {
 
 // Menu items.
 const items = [
- 
   {
     title: "Emissão de nota",
     url: "/create-note",
@@ -23,6 +22,11 @@ const items = [
     title: "Notas fiscais",
     url: "/list-notes",
     icon: Calendar,
+  },
+  {
+    title: "Notas Solicitadas",
+    url: "/requested-notes",
+    icon: FileText,
   },
 ]
 
