@@ -1,14 +1,14 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import AppRoutes from "./presentation/routes/app-routes";
-import { AuthProvider } from "./presentation/hooks/use-auth";
+import { AuthInitializer } from "./components/shared/AuthInitializer";
 
 function App() {
   return (
-    <AuthProvider>
+    <AuthInitializer>
       <Router>
         <AppRoutes />
       </Router>
-    </AuthProvider>
+    </AuthInitializer>
   );
 }
 
