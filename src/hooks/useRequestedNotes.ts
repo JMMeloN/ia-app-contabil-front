@@ -47,29 +47,54 @@ export const useRequestedNotes = () => {
   const estatisticas = useRecoilValue(estatisticasNotas);
   const notasPrioridade = useRecoilValue(notasPorPrioridade);
 
-  // Fetch todas as notas solicitadas
+  // Fetch todas as notas solicitadas (usando dados reais da coleção notes)
   const fetchNotasSolicitadas = useCallback(async () => {
     if (!auth.currentUser) return;
     
     setLoading(true);
     try {
-      const notasRef = collection(db, `users/${auth.currentUser.uid}/requested_notes`);
-      const q = query(notasRef, orderBy('dataSolicitacao', 'desc'));
+      const notasRef = collection(db, `users/${auth.currentUser.uid}/notes`);
+      const q = query(notasRef, orderBy('created_at', 'desc'));
       const snapshot = await getDocs(q);
       
       const notasData = snapshot.docs.map(doc => {
         const data = doc.data();
-        return {
+        
+        // Mapear dados reais para interface RequestedNotes
+        const mappedData: NotaFiscalSolicitada = {
           id: doc.id,
-          ...data,
-          // Normalize data
-          valor: Number(data.valor || 0),
-          dataSolicitacao: data.dataSolicitacao || new Date().toISOString(),
-          dataUltimaAtualizacao: data.dataUltimaAtualizacao || data.dataSolicitacao || new Date().toISOString(),
-          status: data.status || 'pendente',
-          prioridade: data.prioridade || 'media',
+          clienteId: data.empresa_id || doc.id,
+          clienteNome: data.razao_social || 'Cliente não informado',
+          clienteEmail: data.email || '',
+          numeroNota: doc.id.slice(-8).toUpperCase(),
+          valor: Number(data.valor_nota || data.valor_liquido || 0),
+          observacoes: data.observacoes || '',
+          
+          // Mapear status (converter de 'Emitida'/'Processando' para nossos valores)
+          status: data.status === 'Emitida' ? 'processado' : 
+                  data.status === 'Processando' ? 'pendente' : 'pendente',
+          
+          prioridade: 'media', // Valor padrão
+          
+          // Datas
+          dataSolicitacao: data.created_at?.toDate?.()?.toISOString() || 
+                          (data.created_at instanceof Date ? data.created_at.toISOString() : 
+                           new Date().toISOString()),
+          dataUltimaAtualizacao: data.updated_at?.toDate?.()?.toISOString() || 
+                                data.created_at?.toDate?.()?.toISOString() || 
+                                new Date().toISOString(),
+          
+          // Campos obrigatórios da interface
+          createdAt: data.created_at?.toDate?.()?.toISOString() || 
+                    (data.created_at instanceof Date ? data.created_at.toISOString() : 
+                     new Date().toISOString()),
+          updatedAt: data.updated_at?.toDate?.()?.toISOString() || 
+                    data.created_at?.toDate?.()?.toISOString() || 
+                    new Date().toISOString(),
         };
-      }) as NotaFiscalSolicitada[];
+        
+        return mappedData;
+      });
       
       setNotasSolicitadas(notasData);
       
@@ -111,25 +136,29 @@ export const useRequestedNotes = () => {
     }
   }, [setNotasSolicitadas]);
 
-  // Atualizar status da nota
+  // Atualizar status da nota (na coleção notes real)
   const updateNotaStatus = useCallback(async (notaId: string, novoStatus: NotaFiscalStatus) => {
     if (!auth.currentUser) return;
 
     try {
-      const notaRef = doc(db, `users/${auth.currentUser.uid}/requested_notes`, notaId);
-      const dataAtualizacao = new Date().toISOString();
+      const notaRef = doc(db, `users/${auth.currentUser.uid}/notes`, notaId);
+      const dataAtualizacao = new Date();
+      
+      // Mapear status da nossa interface para o formato original
+      const statusOriginal = novoStatus === 'processado' ? 'Emitida' : 
+                            novoStatus === 'anexado' ? 'Processando' :
+                            novoStatus === 'pendente' ? 'Processando' : 'Processando';
       
       await updateDoc(notaRef, {
-        status: novoStatus,
-        dataUltimaAtualizacao: dataAtualizacao,
-        updatedAt: dataAtualizacao,
+        status: statusOriginal,
+        updated_at: dataAtualizacao,
       });
       
       // Update local state
       setNotasSolicitadas(prev => 
         prev.map(nota => 
           nota.id === notaId 
-            ? { ...nota, status: novoStatus, dataUltimaAtualizacao: dataAtualizacao }
+            ? { ...nota, status: novoStatus, dataUltimaAtualizacao: dataAtualizacao.toISOString() }
             : nota
         )
       );
@@ -142,7 +171,7 @@ export const useRequestedNotes = () => {
         statusNovo: novoStatus,
         realizadoPor: auth.currentUser.uid,
         realizadoPorNome: auth.currentUser.displayName || 'Usuário',
-        dataAcao: dataAtualizacao,
+        dataAcao: dataAtualizacao.toISOString(),
       });
       
     } catch (error) {
