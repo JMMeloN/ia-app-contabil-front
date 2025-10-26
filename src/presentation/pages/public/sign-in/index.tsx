@@ -9,11 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Navbar } from "../../../components/layout/header";
 import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
-import { auth, googleProvider } from "../../../../firebase/firebase";
+import { auth, googleProvider, db } from "../../../../firebase/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import icoGoogle from "../../../../assets/ico-google.png";
+import type { UserProfile } from "@/types/user";
 
 export function SignIn() {
   const navigate = useNavigate();
@@ -29,7 +31,25 @@ export function SignIn() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (!userDoc.exists()) {
+        const userProfile: UserProfile = {
+          uid: user.uid,
+          email: user.email || '',
+          displayName: user.displayName || undefined,
+          role: 'cliente',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        
+        await setDoc(userDocRef, userProfile);
+      }
+      
       navigate("/list-notes");
     } catch (error: any) {
       console.error("Erro ao fazer login com Google: ", error.message);
