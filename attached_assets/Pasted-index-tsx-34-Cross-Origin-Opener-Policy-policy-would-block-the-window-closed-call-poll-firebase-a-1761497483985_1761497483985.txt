@@ -1,0 +1,135 @@
+index.tsx:34 Cross-Origin-Opener-Policy policy would block the window.closed call.
+poll @ firebase_auth.js?v=c1c9e22d:7074
+setTimeout
+poll @ firebase_auth.js?v=c1c9e22d:7089
+setTimeout
+poll @ firebase_auth.js?v=c1c9e22d:7089
+pollUserCancellation @ firebase_auth.js?v=c1c9e22d:7091
+onExecution @ firebase_auth.js?v=c1c9e22d:7047
+await in onExecution
+(anonymous) @ firebase_auth.js?v=c1c9e22d:6899
+await in (anonymous)
+execute @ firebase_auth.js?v=c1c9e22d:6895
+executeNotNull @ firebase_auth.js?v=c1c9e22d:7015
+signInWithPopup @ firebase_auth.js?v=c1c9e22d:6980
+handleGoogleLogin @ index.tsx:34
+callCallback2 @ chunk-NUMECXU6.js?v=c1c9e22d:3674
+invokeGuardedCallbackDev @ chunk-NUMECXU6.js?v=c1c9e22d:3699
+invokeGuardedCallback @ chunk-NUMECXU6.js?v=c1c9e22d:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-NUMECXU6.js?v=c1c9e22d:3736
+executeDispatch @ chunk-NUMECXU6.js?v=c1c9e22d:7014
+processDispatchQueueItemsInOrder @ chunk-NUMECXU6.js?v=c1c9e22d:7034
+processDispatchQueue @ chunk-NUMECXU6.js?v=c1c9e22d:7043
+dispatchEventsForPlugins @ chunk-NUMECXU6.js?v=c1c9e22d:7051
+(anonymous) @ chunk-NUMECXU6.js?v=c1c9e22d:7174
+batchedUpdates$1 @ chunk-NUMECXU6.js?v=c1c9e22d:18913
+batchedUpdates @ chunk-NUMECXU6.js?v=c1c9e22d:3579
+dispatchEventForPluginEventSystem @ chunk-NUMECXU6.js?v=c1c9e22d:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-NUMECXU6.js?v=c1c9e22d:5478
+dispatchEvent @ chunk-NUMECXU6.js?v=c1c9e22d:5472
+dispatchDiscreteEvent @ chunk-NUMECXU6.js?v=c1c9e22d:5449Understand this error
+index.tsx:34 Cross-Origin-Opener-Policy policy would block the window.closed call.
+poll @ firebase_auth.js?v=c1c9e22d:7074
+setTimeout
+poll @ firebase_auth.js?v=c1c9e22d:7089
+setTimeout
+poll @ firebase_auth.js?v=c1c9e22d:7089
+pollUserCancellation @ firebase_auth.js?v=c1c9e22d:7091
+onExecution @ firebase_auth.js?v=c1c9e22d:7047
+await in onExecution
+(anonymous) @ firebase_auth.js?v=c1c9e22d:6899
+await in (anonymous)
+execute @ firebase_auth.js?v=c1c9e22d:6895
+executeNotNull @ firebase_auth.js?v=c1c9e22d:7015
+signInWithPopup @ firebase_auth.js?v=c1c9e22d:6980
+handleGoogleLogin @ index.tsx:34
+callCallback2 @ chunk-NUMECXU6.js?v=c1c9e22d:3674
+invokeGuardedCallbackDev @ chunk-NUMECXU6.js?v=c1c9e22d:3699
+invokeGuardedCallback @ chunk-NUMECXU6.js?v=c1c9e22d:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-NUMECXU6.js?v=c1c9e22d:3736
+executeDispatch @ chunk-NUMECXU6.js?v=c1c9e22d:7014
+processDispatchQueueItemsInOrder @ chunk-NUMECXU6.js?v=c1c9e22d:7034
+processDispatchQueue @ chunk-NUMECXU6.js?v=c1c9e22d:7043
+dispatchEventsForPlugins @ chunk-NUMECXU6.js?v=c1c9e22d:7051
+(anonymous) @ chunk-NUMECXU6.js?v=c1c9e22d:7174
+batchedUpdates$1 @ chunk-NUMECXU6.js?v=c1c9e22d:18913
+batchedUpdates @ chunk-NUMECXU6.js?v=c1c9e22d:3579
+dispatchEventForPluginEventSystem @ chunk-NUMECXU6.js?v=c1c9e22d:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-NUMECXU6.js?v=c1c9e22d:5478
+dispatchEvent @ chunk-NUMECXU6.js?v=c1c9e22d:5472
+dispatchDiscreteEvent @ chunk-NUMECXU6.js?v=c1c9e22d:5449Understand this error
+index.tsx:55 Erro ao fazer login com Google:  Cannot add property 0, object is not extensible
+overrideMethod @ hook.js:608
+handleGoogleLogin @ index.tsx:55
+await in handleGoogleLogin
+callCallback2 @ chunk-NUMECXU6.js?v=c1c9e22d:3674
+invokeGuardedCallbackDev @ chunk-NUMECXU6.js?v=c1c9e22d:3699
+invokeGuardedCallback @ chunk-NUMECXU6.js?v=c1c9e22d:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-NUMECXU6.js?v=c1c9e22d:3736
+executeDispatch @ chunk-NUMECXU6.js?v=c1c9e22d:7014
+processDispatchQueueItemsInOrder @ chunk-NUMECXU6.js?v=c1c9e22d:7034
+processDispatchQueue @ chunk-NUMECXU6.js?v=c1c9e22d:7043
+dispatchEventsForPlugins @ chunk-NUMECXU6.js?v=c1c9e22d:7051
+(anonymous) @ chunk-NUMECXU6.js?v=c1c9e22d:7174
+batchedUpdates$1 @ chunk-NUMECXU6.js?v=c1c9e22d:18913
+batchedUpdates @ chunk-NUMECXU6.js?v=c1c9e22d:3579
+dispatchEventForPluginEventSystem @ chunk-NUMECXU6.js?v=c1c9e22d:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-NUMECXU6.js?v=c1c9e22d:5478
+dispatchEvent @ chunk-NUMECXU6.js?v=c1c9e22d:5472
+dispatchDiscreteEvent @ chunk-NUMECXU6.js?v=c1c9e22d:5449Understand this error
+firebase_auth.js?v=c1c9e22d:7310 Uncaught TypeError: Cannot assign to read only property 'lastProcessedEventTime' of object '#<AuthEventManager>'
+    at AuthEventManager.saveEventToCache (firebase_auth.js?v=c1c9e22d:7310:33)
+    at firebase_auth.js?v=c1c9e22d:7276:14
+    at Set.forEach (<anonymous>)
+    at AuthEventManager.onEvent (firebase_auth.js?v=c1c9e22d:7272:20)
+    at _.wn.<anonymous> (firebase_auth.js?v=c1c9e22d:7702:31)
+    at Sm (cb=gapi.loaded_0?le=scs:195:287)
+    at Object.<anonymous> (cb=gapi.loaded_0?le=scs:195:460)
+    at gl (cb=gapi.loaded_0?le=scs:174:307)
+    at pl (cb=gapi.loaded_0?le=scs:174:472)
+    at Kk (cb=gapi.loaded_0?le=scs:175:28)
+saveEventToCache @ firebase_auth.js?v=c1c9e22d:7310
+(anonymous) @ firebase_auth.js?v=c1c9e22d:7276
+onEvent @ firebase_auth.js?v=c1c9e22d:7272
+(anonymous) @ firebase_auth.js?v=c1c9e22d:7702
+Sm @ cb=gapi.loaded_0?le=scs:195
+(anonymous) @ cb=gapi.loaded_0?le=scs:195
+gl @ cb=gapi.loaded_0?le=scs:174
+pl @ cb=gapi.loaded_0?le=scs:174
+Kk @ cb=gapi.loaded_0?le=scs:175
+Qk.hI @ cb=gapi.loaded_0?le=scs:168Understand this error
+cb=gapi.loaded_0?le=scs:195 Cross-Origin-Opener-Policy policy would block the window.close call.
+close @ firebase_auth.js?v=c1c9e22d:7540
+cleanUp @ firebase_auth.js?v=c1c9e22d:7062
+unregisterAndCleanUp @ firebase_auth.js?v=c1c9e22d:6964
+reject @ firebase_auth.js?v=c1c9e22d:6957
+onAuthEvent @ firebase_auth.js?v=c1c9e22d:6924
+await in onAuthEvent
+sendToConsumer @ firebase_auth.js?v=c1c9e22d:7295
+(anonymous) @ firebase_auth.js?v=c1c9e22d:7275
+onEvent @ firebase_auth.js?v=c1c9e22d:7272
+(anonymous) @ firebase_auth.js?v=c1c9e22d:7702
+Sm @ cb=gapi.loaded_0?le=scs:195
+(anonymous) @ cb=gapi.loaded_0?le=scs:195
+gl @ cb=gapi.loaded_0?le=scs:174
+pl @ cb=gapi.loaded_0?le=scs:174
+Kk @ cb=gapi.loaded_0?le=scs:175
+Qk.hI @ cb=gapi.loaded_0?le=scs:168Understand this error
+cb=gapi.loaded_0?le=scs:195 Cross-Origin-Opener-Policy policy would block the window.close call.
+close @ firebase_auth.js?v=c1c9e22d:7540
+cleanUp @ firebase_auth.js?v=c1c9e22d:7062
+unregisterAndCleanUp @ firebase_auth.js?v=c1c9e22d:6964
+reject @ firebase_auth.js?v=c1c9e22d:6957
+onAuthEvent @ firebase_auth.js?v=c1c9e22d:6924
+await in onAuthEvent
+sendToConsumer @ firebase_auth.js?v=c1c9e22d:7295
+(anonymous) @ firebase_auth.js?v=c1c9e22d:7275
+onEvent @ firebase_auth.js?v=c1c9e22d:7272
+(anonymous) @ firebase_auth.js?v=c1c9e22d:7702
+Sm @ cb=gapi.loaded_0?le=scs:195
+(anonymous) @ cb=gapi.loaded_0?le=scs:195
+gl @ cb=gapi.loaded_0?le=scs:174
+pl @ cb=gapi.loaded_0?le=scs:174
+Kk @ cb=gapi.loaded_0?le=scs:175
+Qk.hI @ cb=gapi.loaded_0?le=scs:168Understand this error
+index.tsx:55 Erro ao fazer login com Google:  Cannot assign to read only property '_canInitEmulator' of object '#<AuthImpl>'
