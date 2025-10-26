@@ -55,9 +55,17 @@ export function SignIn() {
     return () => unsubscribe();
   }, [navigate]);
 
-  const handleGoogleLogin = () => {
-    setLoading(true);
-    signInWithRedirect(auth, googleProvider);
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+      console.log("Iniciando login com Google...");
+      await signInWithRedirect(auth, googleProvider);
+      console.log("Redirect iniciado com sucesso");
+    } catch (error: any) {
+      console.error("Erro ao iniciar redirect:", error);
+      setError("Erro ao fazer login com Google: " + error.message);
+      setLoading(false);
+    }
   };
 
   const handleEmailLogin = async (e: any) => {
