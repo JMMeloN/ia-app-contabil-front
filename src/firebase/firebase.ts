@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "firebase/auth"; // Adicionamos 'setPersistence'
+import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -17,15 +17,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-
-setPersistence(auth, browserLocalPersistence)  // Usando 'browserLocalPersistence' para garantir que o estado de login seja mantido
-  .then(() => {
-  })
-  .catch((error) => {
-    console.error("Erro ao configurar persistência: ", error);
-  });
-
-// Exportando as outras funções e serviços
 export const googleProvider = new GoogleAuthProvider();
 export const signInWithEmail = signInWithEmailAndPassword;
 export const db = getFirestore(app);
