@@ -8,60 +8,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Navbar } from "../../../components/layout/header";
-import { signInWithRedirect, signInWithEmailAndPassword, getRedirectResult } from "firebase/auth";
-import { auth, googleProvider, db } from "../../../../firebase/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../../firebase/firebase";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import icoGoogle from "../../../../assets/ico-google.png";
-import type { UserProfile } from "@/types/user";
 
 export function SignIn() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const checkRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result?.user) {
-          const userDocRef = doc(db, 'users', result.user.uid);
-          const userDoc = await getDoc(userDocRef);
-          
-          if (!userDoc.exists()) {
-            const userProfile: UserProfile = {
-              uid: result.user.uid,
-              email: result.user.email || '',
-              displayName: result.user.displayName || undefined,
-              role: 'cliente',
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            };
-            
-            await setDoc(userDocRef, userProfile);
-          }
-          
-          navigate("/list-notes");
-        }
-      } catch (error: any) {
-        if (error.code !== 'auth/popup-closed-by-user') {
-          console.error("Erro no redirect do Google: ", error);
-          setError('Erro ao fazer login com Google');
-        }
-      }
-    };
-    
-    checkRedirectResult();
+    if (auth.currentUser) {
+      navigate("/list-notes");
+    }
   }, [navigate]);
-
-  const handleGoogleLogin = () => {
-    setLoading(true);
-    signInWithRedirect(auth, googleProvider);
-  };
 
   const handleEmailLogin = async (e: any) => {
     e.preventDefault();
