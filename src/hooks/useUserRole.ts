@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '@/firebase/firebase';
+import { db } from '@/firebase/firebase';
+import { useAuth } from '@/presentation/hooks/use-auth';
 import type { UserRole, UserProfile } from '@/types/user';
 
 export function useUserRole() {
+  const { user, isLoading: authLoading } = useAuth();
   const [role, setRole] = useState<UserRole | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -11,9 +13,7 @@ export function useUserRole() {
 
   useEffect(() => {
     const fetchUserRole = async () => {
-      const currentUser = auth.currentUser;
-      
-      if (!currentUser) {
+      if (!user) {
         setRole(null);
         setUserProfile(null);
         setLoading(false);
@@ -21,7 +21,8 @@ export function useUserRole() {
       }
 
       try {
-        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        setLoading(true);
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
         
         if (userDoc.exists()) {
           const data = userDoc.data() as UserProfile;
@@ -31,6 +32,7 @@ export function useUserRole() {
           setRole('cliente');
           setUserProfile(null);
         }
+        setError(null);
       } catch (err) {
         console.error('Erro ao buscar role do usuário:', err);
         setError('Erro ao carregar permissões do usuário');
@@ -40,12 +42,15 @@ export function useUserRole() {
       }
     };
 
-    const unsubscribe = auth.onAuthStateChanged(() => {
+    if (!authLoading) {
       fetchUserRole();
-    });
+    }
+  }, [user, authLoading]);
 
-    return () => unsubscribe();
-  }, []);
-
-  return { role, userProfile, loading, error };
+  return { 
+    role, 
+    userProfile, 
+    loading: authLoading || loading, 
+    error 
+  };
 }
