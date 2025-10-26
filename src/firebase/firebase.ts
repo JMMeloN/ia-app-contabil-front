@@ -1,9 +1,8 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyD2gE-nkPsDham8S6YOwdU0GsFpwKhpixU",
   authDomain: "iacontabil.firebaseapp.com",
@@ -14,7 +13,7 @@ const firebaseConfig = {
   measurementId: "G-LBC81T54YT"
 };
 
-const app = initializeApp(firebaseConfig);
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
