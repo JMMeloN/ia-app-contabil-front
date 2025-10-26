@@ -1,25 +1,9 @@
-import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '@/firebase/firebase';
+import { useRecoilValue } from 'recoil';
 import { authState, authLoadingState } from '@/store';
 
 export const useAuthRecoil = () => {
-  const [authData, setAuthData] = useRecoilState(authState);
-  const [isLoading, setIsLoading] = useRecoilState(authLoadingState);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-      setAuthData({
-        user,
-        isLoading: false,
-        isAuthenticated: !!user,
-      });
-      setIsLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [setAuthData, setIsLoading]);
+  const authData = useRecoilValue(authState);
+  const isLoading = useRecoilValue(authLoadingState);
 
   return {
     user: authData.user,
