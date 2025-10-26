@@ -1,0 +1,41 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserRole() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    function isOperacional() {
+      return isAuthenticated() && getUserRole() == 'operacional';
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'admin';
+    }
+    
+    function getNotaData(noteId) {
+      return firestore.get(/databases/(default)/documents/requestedNotes/$(noteId)).data;
+    }
+    
+    match /requestedNotes/{noteId}/{allPaths=**} {
+      allow read: if isAuthenticated() && (
+        isOperacional() ||
+        isAdmin() ||
+        (getNotaData(noteId).clienteId == request.auth.uid)
+      );
+      
+      allow write: if isAuthenticated() && (
+        isOperacional() || 
+        isAdmin()
+      );
+      
+      allow delete: if isAdmin();
+    }
+  }
+}

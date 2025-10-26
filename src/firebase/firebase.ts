@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "firebase/auth"; // Adicionamos 'setPersistence'
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -28,3 +29,4 @@ setPersistence(auth, browserLocalPersistence)  // Usando 'browserLocalPersistenc
 export const googleProvider = new GoogleAuthProvider();
 export const signInWithEmail = signInWithEmailAndPassword;
 export const db = getFirestore(app);
+export const storage = getStorage(app);

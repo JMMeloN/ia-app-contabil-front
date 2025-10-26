@@ -13,7 +13,9 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/firebase/firebase";
+import { auth, db } from "@/firebase/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import type { UserProfile } from "@/types/user";
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -24,9 +26,22 @@ export function SignUp() {
   const handleRegister = async (e: any) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      const userProfile: UserProfile = {
+        uid: user.uid,
+        email: user.email || email,
+        displayName: user.displayName || undefined,
+        role: 'cliente',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      
+      await setDoc(doc(db, 'users', user.uid), userProfile);
+      
       alert('Usuário registrado com sucesso!');
-      navigate('/sign-in'); // Redireciona para a página de login após o registro
+      navigate('/sign-in');
     } catch (error: any) {
       setError('Erro ao registrar o usuário: ' + error.message);
       console.error("Erro ao registrar o usuário:", error.message);

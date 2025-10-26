@@ -1,0 +1,61 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'admin';
+    }
+    
+    function isOperacional() {
+      return isAuthenticated() && getUserRole() == 'operacional';
+    }
+    
+    function isCliente() {
+      return isAuthenticated() && getUserRole() == 'cliente';
+    }
+    
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      
+      allow update: if isAdmin() || request.auth.uid == userId;
+      
+      allow delete: if isAdmin();
+      
+      match /companies/{companyId} {
+        allow read, write: if isAuthenticated() && request.auth.uid == userId;
+      }
+      
+      match /notes/{noteId} {
+        allow read, write: if isAuthenticated() && request.auth.uid == userId;
+      }
+    }
+    
+    match /requestedNotes/{noteId} {
+      allow read: if isAuthenticated() && (
+        isOperacional() || 
+        isAdmin() || 
+        (isCliente() && resource.data.clienteId == request.auth.uid)
+      );
+      
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.clienteId;
+      
+      allow update: if isAuthenticated() && (
+        isOperacional() || 
+        isAdmin()
+      );
+      
+      allow delete: if isAdmin();
+    }
+  }
+}
