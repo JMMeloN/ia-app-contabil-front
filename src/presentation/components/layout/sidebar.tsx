@@ -1,4 +1,5 @@
-import { Calendar, Inbox, FileText } from "lucide-react"
+import { Calendar, Inbox, FileText, Shield, Package } from "lucide-react"
+import { useUserRole } from "@/hooks/useUserRole"
 
 import {
   Sidebar,
@@ -11,8 +12,38 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-// Menu items.
-const items = [
+const adminItems = [
+  {
+    title: "Painel Admin",
+    url: "/admin",
+    icon: Shield,
+  },
+  {
+    title: "Área Operacional",
+    url: "/operacional",
+    icon: Package,
+  },
+]
+
+const operacionalItems = [
+  {
+    title: "Solicitações",
+    url: "/operacional",
+    icon: Package,
+  },
+  {
+    title: "Todas as Notas",
+    url: "/requested-notes",
+    icon: FileText,
+  },
+]
+
+const clienteItems = [
+  {
+    title: "Minhas Notas",
+    url: "/cliente",
+    icon: FileText,
+  },
   {
     title: "Emissão de nota",
     url: "/create-note",
@@ -23,19 +54,39 @@ const items = [
     url: "/list-notes",
     icon: Calendar,
   },
-  {
-    title: "Notas Solicitadas",
-    url: "/requested-notes",
-    icon: FileText,
-  },
 ]
 
 export function AppSidebar() {
+  const { role, loading } = useUserRole()
+
+  if (loading) {
+    return (
+      <Sidebar>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Carregando...</SidebarGroupLabel>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+    )
+  }
+
+  let items = clienteItems
+  let label = "Menu Cliente"
+
+  if (role === 'admin') {
+    items = adminItems
+    label = "Administração"
+  } else if (role === 'operacional') {
+    items = operacionalItems
+    label = "Operacional"
+  }
+
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupLabel>{label}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
