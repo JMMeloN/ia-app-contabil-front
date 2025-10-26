@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Navbar } from "../../../components/layout/header";
-import { signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, db } from "../../../../firebase/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
@@ -58,11 +58,33 @@ export function SignIn() {
   const handleGoogleLogin = async () => {
     try {
       setLoading(true);
-      console.log("Iniciando login com Google...");
-      await signInWithRedirect(auth, googleProvider);
-      console.log("Redirect iniciado com sucesso");
+      setError('');
+      console.log("Iniciando login com Google via popup...");
+      
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Login com Google bem-sucedido:", result.user.email);
+      
+      const userDocRef = doc(db, 'users', result.user.uid);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (!userDoc.exists()) {
+        console.log("Criando perfil para novo usuário do Google");
+        const userProfile: UserProfile = {
+          uid: result.user.uid,
+          email: result.user.email || '',
+          displayName: result.user.displayName || undefined,
+          role: 'cliente',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        
+        await setDoc(userDocRef, userProfile);
+        console.log("Perfil criado com sucesso");
+      }
+      
+      navigate("/list-notes");
     } catch (error: any) {
-      console.error("Erro ao iniciar redirect:", error);
+      console.error("Erro ao fazer login com Google:", error);
       setError("Erro ao fazer login com Google: " + error.message);
       setLoading(false);
     }
