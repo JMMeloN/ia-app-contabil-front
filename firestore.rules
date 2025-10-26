@@ -24,11 +24,22 @@ service cloud.firestore {
     }
     
     match /users/{userId} {
-      allow read: if isAuthenticated();
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        request.auth.uid == userId
+      );
       
-      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow create: if isAuthenticated() && 
+        request.auth.uid == userId &&
+        request.resource.data.role == 'cliente' &&
+        request.resource.data.uid == userId;
       
-      allow update: if isAdmin() || request.auth.uid == userId;
+      allow update: if isAuthenticated() && request.auth.uid == userId && (
+        (isAdmin()) ||
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'uid']))
+      );
+      
+      allow update: if isAdmin();
       
       allow delete: if isAdmin();
       
