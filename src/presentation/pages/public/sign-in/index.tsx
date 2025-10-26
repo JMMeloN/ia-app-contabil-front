@@ -8,33 +8,59 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Navbar } from "../../../components/layout/header";
-import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
-import { auth, googleProvider } from "../../../../firebase/firebase";
+import { signInWithRedirect, signInWithEmailAndPassword, getRedirectResult } from "firebase/auth";
+import { auth, googleProvider, db } from "../../../../firebase/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import icoGoogle from "../../../../assets/ico-google.png";
+import type { UserProfile } from "@/types/user";
 
 export function SignIn() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (auth.currentUser) {
-      navigate("/list-notes");
-    }
-  }, []);
+    const checkRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          const userDocRef = doc(db, 'users', result.user.uid);
+          const userDoc = await getDoc(userDocRef);
+          
+          if (!userDoc.exists()) {
+            const userProfile: UserProfile = {
+              uid: result.user.uid,
+              email: result.user.email || '',
+              displayName: result.user.displayName || undefined,
+              role: 'cliente',
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            };
+            
+            await setDoc(userDocRef, userProfile);
+          }
+          
+          navigate("/list-notes");
+        }
+      } catch (error: any) {
+        if (error.code !== 'auth/popup-closed-by-user') {
+          console.error("Erro no redirect do Google: ", error);
+          setError('Erro ao fazer login com Google');
+        }
+      }
+    };
+    
+    checkRedirectResult();
+  }, [navigate]);
 
-  const handleGoogleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      navigate("/list-notes");
-    } catch (error: any) {
-      console.error("Erro ao fazer login com Google: ", error.message);
-      setError('Erro ao fazer login com Google: ' + error.message);
-    }
+  const handleGoogleLogin = () => {
+    setLoading(true);
+    signInWithRedirect(auth, googleProvider);
   };
 
   const handleEmailLogin = async (e: any) => {
@@ -95,9 +121,9 @@ export function SignIn() {
               </div>
 
               <Button type="submit" className="w-full mt-6">Entrar</Button>
-              <Button className="w-full mt-4 gap-2" type="button" variant="outline" onClick={handleGoogleLogin}>
+              <Button className="w-full mt-4 gap-2" type="button" variant="outline" onClick={handleGoogleLogin} disabled={loading}>
                 <img className="w-4 h-4" src={icoGoogle} alt="Ícone do Google" />
-                Login com Google
+                {loading ? 'Redirecionando...' : 'Login com Google'}
               </Button>
             </form>
           </CardContent>
