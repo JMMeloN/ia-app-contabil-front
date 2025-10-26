@@ -4,20 +4,20 @@ import logo from "../../../assets/logotipo-mono.png";
 import logoWhite from "../../../assets/logo-white.png";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/firebase/firebase";
-import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { LogOut } from "lucide-react";
 
 export function HeaderIntern() {
-  const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate("/sign-in", { replace: true });
-    } catch (error: any) {
-      console.error("Erro ao fazer logout: ", error.message);
-    }
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        window.location.href = "/sign-in";
+      })
+      .catch((error) => {
+        console.error("Erro ao fazer logout: ", error);
+        window.location.href = "/sign-in";
+      });
   };
 
   return (
