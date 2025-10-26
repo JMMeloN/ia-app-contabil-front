@@ -25,46 +25,34 @@ export function SignIn() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const handleRedirectResult = async () => {
-      try {
-        console.log("Verificando redirect result...");
-        const result = await getRedirectResult(auth);
-        console.log("Redirect result:", result);
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        console.log("Usuário autenticado detectado:", user.email);
         
-        if (result?.user) {
-          console.log("Usuário encontrado no redirect:", result.user.email);
-          const userDocRef = doc(db, 'users', result.user.uid);
-          const userDoc = await getDoc(userDocRef);
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+        
+        if (!userDoc.exists()) {
+          console.log("Criando perfil para novo usuário");
+          const userProfile: UserProfile = {
+            uid: user.uid,
+            email: user.email || '',
+            displayName: user.displayName || undefined,
+            role: 'cliente',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
           
-          if (!userDoc.exists()) {
-            console.log("Criando perfil para novo usuário");
-            const userProfile: UserProfile = {
-              uid: result.user.uid,
-              email: result.user.email || '',
-              displayName: result.user.displayName || undefined,
-              role: 'cliente',
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            };
-            
-            await setDoc(userDocRef, userProfile);
-            console.log("Perfil criado com sucesso");
-          } else {
-            console.log("Usuário já possui perfil");
-          }
-          
-          console.log("Navegando para /list-notes");
-          navigate("/list-notes");
-        } else {
-          console.log("Nenhum resultado de redirect encontrado");
+          await setDoc(userDocRef, userProfile);
+          console.log("Perfil criado com sucesso");
         }
-      } catch (error: any) {
-        console.error("Erro no redirect:", error);
-        setError("Erro ao processar login: " + error.message);
+        
+        console.log("Navegando para /list-notes");
+        navigate("/list-notes");
       }
-    };
-    
-    handleRedirectResult();
+    });
+
+    return () => unsubscribe();
   }, [navigate]);
 
   const handleGoogleLogin = () => {
