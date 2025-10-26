@@ -1,0 +1,42 @@
+
+﻿
+useUserRole.ts:37 Erro ao buscar role do usuário: TypeError: Cannot add property 0, object is not extensible
+    at Array.push (<anonymous>)
+ Error Component Stack
+    at AppSidebar (sidebar.tsx:60:29)
+    at div (<anonymous>)
+    at sidebar.tsx:58:7
+    at Layout (sidebar-provider.tsx:4:34)
+    at PrivateRoute (private-routes.tsx:10:25)
+    at AuthInitializer (AuthInitializer.tsx:11:35)
+    at App (<anonymous>)
+    at ThemeProvider (theme-provider.tsx:24:3)
+index.tsx:39 [2025-10-26T16:43:29.439Z]  @firebase/firestore: Firestore (11.10.0): FIRESTORE (11.10.0) INTERNAL ASSERTION FAILED: Unexpected state (ID: a540) Error Component Stack
+    at ListNotes (index.tsx:26:29)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at sidebar.tsx:58:7
+    at Layout (sidebar-provider.tsx:4:34)
+    at PrivateRoute (private-routes.tsx:10:25)
+    at AuthInitializer (AuthInitializer.tsx:11:35)
+    at App (<anonymous>)
+    at ThemeProvider (theme-provider.tsx:24:3)
+index.tsx:48 Erro ao buscar notas:  Error: FIRESTORE (11.10.0) INTERNAL ASSERTION FAILED: Unexpected state (ID: a540)
+    at fetchNotas (index.tsx:39:37)
+    at index.tsx:52:5
+ Error Component Stack
+    at ListNotes (index.tsx:26:29)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at sidebar.tsx:58:7
+    at Layout (sidebar-provider.tsx:4:34)
+    at PrivateRoute (private-routes.tsx:10:25)
+    at AuthInitializer (AuthInitializer.tsx:11:35)
+    at App (<anonymous>)
+    at ThemeProvider (theme-provider.tsx:24:3)
+header.tsx:27 Erro ao fazer logout:  Cannot assign to read only property 'operations' of object '#<AuthImpl>'
+firebase_auth.js?v=c1c9e22d:2777 Uncaught (in promise) TypeError: Cannot assign to read only property 'currentUser' of object '#<AuthImpl>'
+    at AuthImpl.directlySetCurrentUser (firebase_auth.js?v=c1c9e22d:2777:22)
+    at firebase_auth.js?v=c1c9e22d:2536:18
+header.tsx:27 Erro ao fazer logout:  Cannot assign to read only property 'operations' of object '#<AuthImpl>'
+firebase_auth.js?v=c1c9e22d:2777 Uncaught (in promise) TypeError: Cannot assign to read only property 'currentUser' of object '#<AuthImpl>'

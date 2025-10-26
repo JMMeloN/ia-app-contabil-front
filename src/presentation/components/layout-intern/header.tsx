@@ -7,21 +7,13 @@ import { auth } from "@/firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { LogOut } from "lucide-react";
-import { useSetRecoilState } from "recoil";
-import { authState } from "@/store";
 
 export function HeaderIntern() {
   const navigate = useNavigate();
-  const setAuthData = useSetRecoilState(authState);
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setAuthData({
-        user: null,
-        isLoading: false,
-        isAuthenticated: false,
-      });
       navigate("/sign-in", { replace: true });
     } catch (error: any) {
       console.error("Erro ao fazer logout: ", error.message);
