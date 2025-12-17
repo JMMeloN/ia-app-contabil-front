@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -21,10 +27,7 @@ import { phoneMask } from '@/lib/utils/masks';
 const profileSchema = z.object({
   nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
   email: z.string().email('Email inválido').min(1, 'Email é obrigatório'),
-  telefone: z
-    .string()
-    .min(10, 'Telefone inválido')
-    .optional(),
+  telefone: z.string().min(10, 'Telefone inválido').optional(),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -49,7 +52,7 @@ export function Profile() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: 'http://localhost:3333/users/profile',
+        url: '/users/profile',
         method: 'get',
       });
 
@@ -75,7 +78,7 @@ export function Profile() {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
 
       const response = await httpClient.request({
-        url: 'http://localhost:3333/users/profile',
+        url: '/users/profile',
         method: 'put',
         body: {
           name: data.nome,
@@ -95,7 +98,8 @@ export function Profile() {
       }
     } catch (error: any) {
       toast.error('Erro ao atualizar perfil', {
-        description: error.response?.data?.error || 'Erro ao conectar com o servidor.',
+        description:
+          error.response?.data?.error || 'Erro ao conectar com o servidor.',
       });
     }
   };
@@ -123,73 +127,80 @@ export function Profile() {
             </div>
           ) : (
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* Nome */}
-              <FormField
-                control={form.control}
-                name="nome"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome Completo *</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Seu nome completo"
-                        disabled={form.formState.isSubmitting}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                {/* Nome */}
+                <FormField
+                  control={form.control}
+                  name="nome"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nome Completo *</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Seu nome completo"
+                          disabled={form.formState.isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              {/* Email */}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email *</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="seu@email.com"
-                        disabled={form.formState.isSubmitting}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                {/* Email */}
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email *</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="seu@email.com"
+                          disabled={form.formState.isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              {/* Telefone */}
-              <FormField
-                control={form.control}
-                name="telefone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Telefone *</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="(00) 00000-0000"
-                        disabled={form.formState.isSubmitting}
-                        {...field}
-                        onChange={(e) => field.onChange(phoneMask(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                {/* Telefone */}
+                <FormField
+                  control={form.control}
+                  name="telefone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Telefone *</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="(00) 00000-0000"
+                          disabled={form.formState.isSubmitting}
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(phoneMask(e.target.value))
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              {/* Actions */}
-              <div className="flex gap-4">
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                  <Save className="mr-2 h-4 w-4" />
-                  {form.formState.isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
-                </Button>
-              </div>
+                {/* Actions */}
+                <div className="flex gap-4">
+                  <Button type="submit" disabled={form.formState.isSubmitting}>
+                    <Save className="mr-2 h-4 w-4" />
+                    {form.formState.isSubmitting
+                      ? 'Salvando...'
+                      : 'Salvar Alterações'}
+                  </Button>
+                </div>
               </form>
             </Form>
           )}
@@ -199,14 +210,10 @@ export function Profile() {
       <Card>
         <CardHeader>
           <CardTitle>Segurança</CardTitle>
-          <CardDescription>
-            Altere sua senha de acesso
-          </CardDescription>
+          <CardDescription>Altere sua senha de acesso</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button variant="outline">
-            Alterar Senha
-          </Button>
+          <Button variant="outline">Alterar Senha</Button>
         </CardContent>
       </Card>
     </div>

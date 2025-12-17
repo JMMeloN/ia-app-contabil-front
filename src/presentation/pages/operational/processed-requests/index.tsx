@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { API_CONFIG } from '@/main/config/api-config';
 import { Badge } from '@/components/ui/badge';
+
 import {
   Table,
   TableBody,
@@ -35,13 +37,15 @@ export function ProcessedRequests() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: 'http://localhost:3333/requests/all',
+        url: '/requests/all',
         method: 'get',
       });
 
       if (response.statusCode === 200) {
         // Filtrar apenas as processadas
-        const processadas = response.body.filter((req: any) => req.status === 'PROCESSADA');
+        const processadas = response.body.filter(
+          (req: any) => req.status === 'PROCESSADA',
+        );
         setRequests(processadas);
       }
     } catch (error) {
@@ -72,7 +76,7 @@ export function ProcessedRequests() {
 
     // Fazer download real
     const link = document.createElement('a');
-    link.href = `http://localhost:3333${arquivoUrl}`;
+    link.href = `${API_CONFIG.baseURL}${arquivoUrl}`;
     link.download = arquivoUrl.split('/').pop() || 'nota.pdf';
     document.body.appendChild(link);
     link.click();
@@ -94,9 +98,7 @@ export function ProcessedRequests() {
 
       <Card>
         <CardHeader>
-          <CardTitle>
-            Processadas ({requests.length})
-          </CardTitle>
+          <CardTitle>Processadas ({requests.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -158,19 +160,27 @@ export function ProcessedRequests() {
                               </div>
                               <div>
                                 <Label>Valor</Label>
-                                <p className="text-sm">{formatCurrency(request.valor)}</p>
+                                <p className="text-sm">
+                                  {formatCurrency(request.valor)}
+                                </p>
                               </div>
                               <div>
                                 <Label>Data de Emissão</Label>
-                                <p className="text-sm">{formatDate(request.dataEmissao)}</p>
+                                <p className="text-sm">
+                                  {formatDate(request.dataEmissao)}
+                                </p>
                               </div>
                               <div>
                                 <Label>Solicitado em</Label>
-                                <p className="text-sm">{formatDate(request.solicitadoEm)}</p>
+                                <p className="text-sm">
+                                  {formatDate(request.solicitadoEm)}
+                                </p>
                               </div>
                               <div>
                                 <Label>Processado em</Label>
-                                <p className="text-sm">{formatDate(request.processadoEm)}</p>
+                                <p className="text-sm">
+                                  {formatDate(request.processadoEm)}
+                                </p>
                               </div>
                               <div>
                                 <Label>Status</Label>
@@ -179,7 +189,9 @@ export function ProcessedRequests() {
                               {request.observacoes && (
                                 <div>
                                   <Label>Observações</Label>
-                                  <p className="text-sm">{request.observacoes}</p>
+                                  <p className="text-sm">
+                                    {request.observacoes}
+                                  </p>
                                 </div>
                               )}
                               <div>
@@ -188,7 +200,9 @@ export function ProcessedRequests() {
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => handleDownload(request.arquivoUrl)}
+                                    onClick={() =>
+                                      handleDownload(request.arquivoUrl)
+                                    }
                                   >
                                     <FileText className="mr-2 h-4 w-4" />
                                     {request.arquivoUrl.split('/').pop()}

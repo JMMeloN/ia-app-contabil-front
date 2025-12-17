@@ -21,7 +21,7 @@ export function UserDashboard() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: 'http://localhost:3333/requests',
+        url: '/requests',
         method: 'get',
       });
 

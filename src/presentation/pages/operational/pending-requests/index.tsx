@@ -40,13 +40,15 @@ export function PendingRequests() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: 'http://localhost:3333/requests/all',
+        url: '/requests/all',
         method: 'get',
       });
 
       if (response.statusCode === 200) {
         // Filtrar apenas as pendentes
-        const pendentes = response.body.filter((req: any) => req.status === 'PENDENTE');
+        const pendentes = response.body.filter(
+          (req: any) => req.status === 'PENDENTE',
+        );
         setRequests(pendentes);
       }
     } catch (error) {
@@ -85,7 +87,7 @@ export function PendingRequests() {
       formData.append('file', selectedFile);
 
       const response = await httpClient.request({
-        url: `http://localhost:3333/upload/${selectedRequest.id}`,
+        url: `/upload/${selectedRequest.id}`,
         method: 'post',
         body: formData,
         headers: {
@@ -95,7 +97,8 @@ export function PendingRequests() {
 
       if (response.statusCode === 200) {
         toast.success('Solicitação processada com sucesso!', {
-          description: 'A nota fiscal foi enviada e o status foi atualizado para Processada.',
+          description:
+            'A nota fiscal foi enviada e o status foi atualizado para Processada.',
         });
         setUploadDialogOpen(false);
         setSelectedFile(null);
@@ -108,7 +111,8 @@ export function PendingRequests() {
       }
     } catch (error: any) {
       toast.error('Erro ao processar solicitação', {
-        description: error.response?.data?.error || 'Erro ao conectar com o servidor.',
+        description:
+          error.response?.data?.error || 'Erro ao conectar com o servidor.',
       });
     }
   };
@@ -124,9 +128,7 @@ export function PendingRequests() {
 
       <Card>
         <CardHeader>
-          <CardTitle>
-            Pendentes ({requests.length})
-          </CardTitle>
+          <CardTitle>Pendentes ({requests.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -188,11 +190,15 @@ export function PendingRequests() {
                               </div>
                               <div>
                                 <Label>Valor</Label>
-                                <p className="text-sm">{formatCurrency(request.valor)}</p>
+                                <p className="text-sm">
+                                  {formatCurrency(request.valor)}
+                                </p>
                               </div>
                               <div>
                                 <Label>Data de Emissão</Label>
-                                <p className="text-sm">{formatDate(request.dataEmissao)}</p>
+                                <p className="text-sm">
+                                  {formatDate(request.dataEmissao)}
+                                </p>
                               </div>
                               <div>
                                 <Label>Status</Label>
@@ -201,7 +207,9 @@ export function PendingRequests() {
                               {request.observacoes && (
                                 <div>
                                   <Label>Observações</Label>
-                                  <p className="text-sm">{request.observacoes}</p>
+                                  <p className="text-sm">
+                                    {request.observacoes}
+                                  </p>
                                 </div>
                               )}
                             </div>

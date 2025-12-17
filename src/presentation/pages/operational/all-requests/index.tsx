@@ -64,7 +64,7 @@ export function AllRequests() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: 'http://localhost:3333/requests/all',
+        url: '/requests/all',
         method: 'get',
       });
 
@@ -107,7 +107,7 @@ export function AllRequests() {
       formData.append('file', selectedFile);
 
       const response = await httpClient.request({
-        url: `http://localhost:3333/upload/${selectedRequest.id}`,
+        url: `/upload/${selectedRequest.id}`,
         method: 'post',
         body: formData,
         headers: {
@@ -142,7 +142,7 @@ export function AllRequests() {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
 
       const response = await httpClient.request({
-        url: `http://localhost:3333/requests/${selectedRequest.id}/status`,
+        url: `/requests/${selectedRequest.id}/status`,
         method: 'patch',
         body: {
           status: newStatus,

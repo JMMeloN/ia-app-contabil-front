@@ -28,7 +28,7 @@ export function MyCompanies() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: 'http://localhost:3333/companies',
+        url: '/companies',
         method: 'get',
       });
 
@@ -50,7 +50,7 @@ export function MyCompanies() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: `http://localhost:3333/companies/${companyId}`,
+        url: `/companies/${companyId}`,
         method: 'delete',
       });
 
@@ -64,7 +64,8 @@ export function MyCompanies() {
       }
     } catch (error: any) {
       toast.error('Erro ao deletar empresa', {
-        description: error.response?.data?.error || 'Erro ao conectar com o servidor.',
+        description:
+          error.response?.data?.error || 'Erro ao conectar com o servidor.',
       });
     }
   };
@@ -99,7 +100,8 @@ export function MyCompanies() {
             </div>
           ) : companies.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhuma empresa cadastrada. Clique em "Cadastrar Empresa" para começar.
+              Nenhuma empresa cadastrada. Clique em "Cadastrar Empresa" para
+              começar.
             </div>
           ) : (
             <Table>
@@ -116,7 +118,9 @@ export function MyCompanies() {
               <TableBody>
                 {companies.map((company) => (
                   <TableRow key={company.id}>
-                    <TableCell className="font-medium">{company.nome}</TableCell>
+                    <TableCell className="font-medium">
+                      {company.nome}
+                    </TableCell>
                     <TableCell>{company.cnpj}</TableCell>
                     <TableCell>{company.email}</TableCell>
                     <TableCell>{company.telefone}</TableCell>
@@ -128,7 +132,9 @@ export function MyCompanies() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => toast.info('Função de editar em breve!')}
+                          onClick={() =>
+                            toast.info('Função de editar em breve!')
+                          }
                         >
                           <Edit className="h-4 w-4" />
                         </Button>

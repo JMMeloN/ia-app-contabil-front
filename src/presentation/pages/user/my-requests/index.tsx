@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { USER_ROUTES } from '@/presentation/routes/route-paths';
 import { useState, useEffect } from 'react';
 import { HttpClientFactory } from '@/main/factories/http/http-client-factory';
+import { API_CONFIG } from '@/main/config/api-config';
 import { toast } from 'sonner';
 
 const statusConfig = {
@@ -44,7 +45,7 @@ export function MyRequests() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: 'http://localhost:3333/requests',
+        url: '/requests',
         method: 'get',
       });
 
@@ -66,7 +67,7 @@ export function MyRequests() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: `http://localhost:3333/requests/${requestId}`,
+        url: `/requests/${requestId}`,
         method: 'delete',
       });
 
@@ -80,7 +81,8 @@ export function MyRequests() {
       }
     } catch (error: any) {
       toast.error('Erro ao cancelar solicitação', {
-        description: error.response?.data?.error || 'Erro ao conectar com o servidor.',
+        description:
+          error.response?.data?.error || 'Erro ao conectar com o servidor.',
       });
     }
   };
@@ -93,7 +95,7 @@ export function MyRequests() {
 
     // Fazer download real
     const link = document.createElement('a');
-    link.href = `http://localhost:3333${arquivoUrl}`;
+    link.href = `${API_CONFIG.baseURL}${arquivoUrl}`;
     link.download = arquivoUrl.split('/').pop() || 'nota.pdf';
     document.body.appendChild(link);
     link.click();
@@ -141,7 +143,8 @@ export function MyRequests() {
             </div>
           ) : requests.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              Nenhuma solicitação encontrada. Clique em "Nova Solicitação" para começar.
+              Nenhuma solicitação encontrada. Clique em "Nova Solicitação" para
+              começar.
             </div>
           ) : (
             <Table>
@@ -164,8 +167,18 @@ export function MyRequests() {
                     <TableCell>{formatCurrency(request.valor)}</TableCell>
                     <TableCell>{formatDate(request.dataEmissao)}</TableCell>
                     <TableCell>
-                      <Badge variant={statusConfig[request.status as keyof typeof statusConfig].variant}>
-                        {statusConfig[request.status as keyof typeof statusConfig].label}
+                      <Badge
+                        variant={
+                          statusConfig[
+                            request.status as keyof typeof statusConfig
+                          ].variant
+                        }
+                      >
+                        {
+                          statusConfig[
+                            request.status as keyof typeof statusConfig
+                          ].label
+                        }
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
@@ -173,15 +186,16 @@ export function MyRequests() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {request.status === 'PROCESSADA' && request.arquivoUrl && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleDownload(request.arquivoUrl)}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        )}
+                        {request.status === 'PROCESSADA' &&
+                          request.arquivoUrl && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleDownload(request.arquivoUrl)}
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          )}
                         {request.status === 'PENDENTE' && (
                           <Button
                             size="sm"
