@@ -37,7 +37,7 @@ export function ProcessedRequests() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: '/requests/all',
+        url: '/requests?status=PROCESSADA',
         method: 'get',
       });
 
@@ -125,9 +125,9 @@ export function ProcessedRequests() {
                 {requests.map((request) => (
                   <TableRow key={request.id}>
                     <TableCell className="font-medium">
-                      {request.empresa?.nome || 'N/A'}
+                      {request.company?.nome || 'N/A'}
                     </TableCell>
-                    <TableCell>{request.usuario?.name || 'N/A'}</TableCell>
+                    <TableCell>{request.user?.name || 'N/A'}</TableCell>
                     <TableCell>{formatCurrency(request.valor)}</TableCell>
                     <TableCell>{formatDate(request.dataEmissao)}</TableCell>
                     <TableCell className="text-muted-foreground">
@@ -152,11 +152,11 @@ export function ProcessedRequests() {
                             <div className="space-y-4">
                               <div>
                                 <Label>Empresa</Label>
-                                <p className="text-sm">{request.empresaNome}</p>
+                                <p className="text-sm">{request.company?.nome}</p>
                               </div>
                               <div>
                                 <Label>Usuário</Label>
-                                <p className="text-sm">{request.usuarioNome}</p>
+                                <p className="text-sm">{request.user?.name}</p>
                               </div>
                               <div>
                                 <Label>Valor</Label>
