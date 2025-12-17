@@ -46,9 +46,9 @@ export function SignIn() {
         localStorage.setItem('user_role', user.role);
 
         // Redirecionar baseado no perfil
-        if (user.role === 'CLIENTE') {
+        if (user.role === 'USER' || user.role === 'CLIENTE') {
           navigate('/dashboard');
-        } else if (user.role === 'OPERACIONAL' || user.role === 'ADMIN') {
+        } else if (user.role === 'OPERATIONAL' || user.role === 'OPERACIONAL' || user.role === 'ADMIN') {
           navigate('/operacional/dashboard');
         } else {
           navigate('/dashboard');

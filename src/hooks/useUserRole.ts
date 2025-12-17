@@ -15,8 +15,8 @@ export function useUserRole() {
   // Mapear roles do backend para o frontend
   let role: UserRole = 'cliente';
   if (userRole) {
-    if (userRole === 'CLIENTE') role = 'cliente';
-    else if (userRole === 'OPERACIONAL') role = 'operacional';
+    if (userRole === 'USER' || userRole === 'CLIENTE') role = 'cliente';
+    else if (userRole === 'OPERATIONAL' || userRole === 'OPERACIONAL') role = 'operacional';
     else if (userRole === 'ADMIN') role = 'admin';
   } else if (savedMockRole && ['cliente', 'operacional', 'admin'].includes(savedMockRole)) {
     role = savedMockRole;

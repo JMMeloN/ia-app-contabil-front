@@ -9,6 +9,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { PlusCircle, Download, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { USER_ROUTES } from '@/presentation/routes/route-paths';
@@ -36,6 +46,7 @@ export function MyRequests() {
   const navigate = useNavigate();
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [requestToCancel, setRequestToCancel] = useState<string | null>(null);
 
   useEffect(() => {
     fetchRequests();
@@ -61,13 +72,13 @@ export function MyRequests() {
     }
   };
 
-  const handleCancel = async (requestId: string) => {
-    if (!confirm('Tem certeza que deseja cancelar esta solicitação?')) return;
+  const confirmCancel = async () => {
+    if (!requestToCancel) return;
 
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: `/requests/${requestId}`,
+        url: `/requests/${requestToCancel}`,
         method: 'delete',
       });
 
@@ -84,6 +95,8 @@ export function MyRequests() {
         description:
           error.response?.data?.error || 'Erro ao conectar com o servidor.',
       });
+    } finally {
+      setRequestToCancel(null);
     }
   };
 
@@ -200,7 +213,7 @@ export function MyRequests() {
                           <Button
                             size="sm"
                             variant="destructive"
-                            onClick={() => handleCancel(request.id)}
+                            onClick={() => setRequestToCancel(request.id)}
                           >
                             <X className="h-4 w-4" />
                           </Button>
@@ -214,6 +227,23 @@ export function MyRequests() {
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={!!requestToCancel} onOpenChange={() => setRequestToCancel(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancelar Solicitação</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja cancelar esta solicitação? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Não, voltar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmCancel} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Sim, cancelar solicitação
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -8,6 +8,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { USER_ROUTES } from '@/presentation/routes/route-paths';
@@ -19,6 +29,7 @@ export function MyCompanies() {
   const navigate = useNavigate();
   const [companies, setCompanies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [companyToDelete, setCompanyToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCompanies();
@@ -44,13 +55,13 @@ export function MyCompanies() {
     }
   };
 
-  const handleDelete = async (companyId: string) => {
-    if (!confirm('Tem certeza que deseja deletar esta empresa?')) return;
+  const confirmDelete = async () => {
+    if (!companyToDelete) return;
 
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: `/companies/${companyId}`,
+        url: `/companies/${companyToDelete}`,
         method: 'delete',
       });
 
@@ -67,6 +78,8 @@ export function MyCompanies() {
         description:
           error.response?.data?.error || 'Erro ao conectar com o servidor.',
       });
+    } finally {
+      setCompanyToDelete(null);
     }
   };
 
@@ -141,7 +154,7 @@ export function MyCompanies() {
                         <Button
                           size="sm"
                           variant="destructive"
-                          onClick={() => handleDelete(company.id)}
+                          onClick={() => setCompanyToDelete(company.id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -154,6 +167,23 @@ export function MyCompanies() {
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={!!companyToDelete} onOpenChange={() => setCompanyToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deletar Empresa</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja deletar esta empresa? Todas as solicitações relacionadas a ela também serão afetadas. Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Não, voltar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Sim, deletar empresa
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
