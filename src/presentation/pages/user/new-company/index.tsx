@@ -78,7 +78,7 @@ export function NewCompany() {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
 
       const response = await httpClient.request({
-        url: 'http://localhost:3333/companies',
+        url: API_ENDPOINTS.companies.base,
         method: 'post',
         body: {
           nome: data.nome,

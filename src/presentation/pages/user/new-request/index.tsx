@@ -52,7 +52,7 @@ export function NewRequest() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: 'http://localhost:3333/companies',
+        url: API_ENDPOINTS.companies.base,
         method: 'get',
       });
 
@@ -78,7 +78,7 @@ export function NewRequest() {
         : data.valor;
 
       const response = await httpClient.request({
-        url: 'http://localhost:3333/requests',
+        url: API_ENDPOINTS.requests.base,
         method: 'post',
         body: {
           companyId: data.companyId,
