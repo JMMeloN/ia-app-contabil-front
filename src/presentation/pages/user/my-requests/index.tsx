@@ -175,7 +175,7 @@ export function MyRequests() {
                 {requests.map((request) => (
                   <TableRow key={request.id}>
                     <TableCell className="font-medium">
-                      {request.empresa?.nome || 'N/A'}
+                      {request.company?.nome || 'N/A'}
                     </TableCell>
                     <TableCell>{formatCurrency(request.valor)}</TableCell>
                     <TableCell>{formatDate(request.dataEmissao)}</TableCell>
