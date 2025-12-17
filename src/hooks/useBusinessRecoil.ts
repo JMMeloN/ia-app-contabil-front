@@ -59,11 +59,15 @@ export const useNotas = () => {
       });
 
       if (response.body) {
-        const notasFiscais = (response.body as RequestFromBackend[]).map(requestToNotaFiscal);
+        const notasFiscais = (response.body as RequestFromBackend[]).map(
+          requestToNotaFiscal,
+        );
         setNotas(notasFiscais);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao buscar notas fiscais');
+      setError(
+        err instanceof Error ? err.message : 'Erro ao buscar notas fiscais',
+      );
       console.error('Erro ao buscar notas:', err);
     } finally {
       setLoading(false);
@@ -82,11 +86,15 @@ export const useNotas = () => {
       });
 
       if (response.body) {
-        const novaNota = requestToNotaFiscal(response.body as RequestFromBackend);
+        const novaNota = requestToNotaFiscal(
+          response.body as RequestFromBackend,
+        );
         setNotas((prev) => [...prev, novaNota]);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao criar nota fiscal');
+      setError(
+        err instanceof Error ? err.message : 'Erro ao criar nota fiscal',
+      );
       console.error('Erro ao criar nota:', err);
       throw err;
     } finally {

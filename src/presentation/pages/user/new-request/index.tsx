@@ -26,6 +26,7 @@ import { requestSchema, type RequestFormData } from '@/lib/validations/request-s
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 import { HttpClientFactory } from '@/main/factories/http/http-client-factory';
+import { API_ENDPOINTS } from '@/main/config/api-config';
 import { currencyMask, currencyToNumber } from '@/lib/utils/masks';
 
 export function NewRequest() {

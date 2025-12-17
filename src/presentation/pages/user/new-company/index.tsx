@@ -24,6 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { companySchema, type CompanyFormData } from '@/lib/validations/company-schema';
 import { toast } from 'sonner';
 import { HttpClientFactory } from '@/main/factories/http/http-client-factory';
+import { API_ENDPOINTS } from '@/main/config/api-config';
 import { phoneMask, cnpjMask, cepMask } from '@/lib/utils/masks';
 
 const BRAZILIAN_STATES = [
