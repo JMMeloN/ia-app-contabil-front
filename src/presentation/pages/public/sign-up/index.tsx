@@ -12,39 +12,47 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "@/firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
-import type { UserProfile } from "@/types/user";
+import { HttpClientFactory } from "@/main/factories/http/http-client-factory";
+import { toast } from "sonner";
 
 export function SignUp() {
   const navigate = useNavigate();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
+
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      
-      const userProfile: UserProfile = {
-        uid: user.uid,
-        email: user.email || email,
-        displayName: user.displayName || undefined,
-        role: 'cliente',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      
-      await setDoc(doc(db, 'users', user.uid), userProfile);
-      
-      alert('Usuário registrado com sucesso!');
-      navigate('/sign-in');
-    } catch (error: any) {
-      setError('Erro ao registrar o usuário: ' + error.message);
-      console.error("Erro ao registrar o usuário:", error.message);
+      const httpClient = HttpClientFactory.makePublicHttpClient();
+
+      const response = await httpClient.request({
+        url: 'http://localhost:3333/auth/register',
+        method: 'post',
+        body: {
+          name,
+          email,
+          password,
+        },
+      });
+
+      if (response.statusCode === 201) {
+        toast.success('Cadastro realizado com sucesso!', {
+          description: 'Você já pode fazer login com suas credenciais.',
+        });
+        setTimeout(() => navigate('/sign-in'), 1500);
+      } else {
+        setError(response.body?.error || 'Erro ao realizar cadastro');
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Erro ao conectar com o servidor');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,6 +70,18 @@ export function SignUp() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleRegister}>
+              <div className="mb-4">
+                <Label htmlFor="name">Nome Completo:</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  minLength={3}
+                />
+              </div>
+
               <div className="mb-4">
                 <Label htmlFor="email">Email:</Label>
                 <Input
@@ -81,14 +101,18 @@ export function SignUp() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  minLength={6}
                 />
+                <p className="text-xs text-muted-foreground mt-1">Mínimo 6 caracteres</p>
               </div>
 
               {error && (
                 <p className="text-red-500 mb-4">{error}</p>
               )}
 
-              <Button type="submit" className="w-full mt-6">Cadastrar</Button>
+              <Button type="submit" className="w-full mt-6" disabled={loading}>
+                {loading ? 'Cadastrando...' : 'Cadastrar'}
+              </Button>
             </form>
           </CardContent>
         </Card>

@@ -1,56 +1,36 @@
-import { useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebase';
-import { useAuth } from '@/presentation/hooks/use-auth';
-import type { UserRole, UserProfile } from '@/types/user';
+import type { UserRole } from '@/types/user';
 
+// Hook para gerenciar perfil do usuário
 export function useUserRole() {
-  const { user, isLoading: authLoading } = useAuth();
-  const [role, setRole] = useState<UserRole | null>(null);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Primeiro tenta pegar do login real
+  const userRole = (typeof window !== 'undefined'
+    ? localStorage.getItem('user_role')
+    : null) as string | null;
 
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      if (!user) {
-        setRole(null);
-        setUserProfile(null);
-        setLoading(false);
-        return;
-      }
+  // Se não tiver role do login, usa o mock
+  const savedMockRole = (typeof window !== 'undefined'
+    ? localStorage.getItem('mock_user_role')
+    : null) as UserRole | null;
 
-      try {
-        setLoading(true);
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        
-        if (userDoc.exists()) {
-          const data = userDoc.data() as UserProfile;
-          setUserProfile(data);
-          setRole(data.role || 'cliente');
-        } else {
-          setRole('cliente');
-          setUserProfile(null);
-        }
-        setError(null);
-      } catch (err) {
-        console.error('Erro ao buscar role do usuário:', err);
-        setError('Erro ao carregar permissões do usuário');
-        setRole('cliente');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Mapear roles do backend para o frontend
+  let role: UserRole = 'cliente';
+  if (userRole) {
+    if (userRole === 'CLIENTE') role = 'cliente';
+    else if (userRole === 'OPERACIONAL') role = 'operacional';
+    else if (userRole === 'ADMIN') role = 'admin';
+  } else if (savedMockRole && ['cliente', 'operacional', 'admin'].includes(savedMockRole)) {
+    role = savedMockRole;
+  }
 
-    if (!authLoading) {
-      fetchUserRole();
-    }
-  }, [user, authLoading]);
+  // Debug - mostrar qual role está sendo usado
+  if (typeof window !== 'undefined') {
+    console.log('🔑 Role atual:', role, userRole ? '(real)' : '(mock)');
+  }
 
-  return { 
-    role, 
-    userProfile, 
-    loading: authLoading || loading, 
-    error 
+  return {
+    role,
+    userProfile: null,
+    loading: false,
+    error: null,
   };
 }

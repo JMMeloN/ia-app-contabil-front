@@ -17,8 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowRight } from "lucide-react";
-import { useDashboard } from "@/hooks";
+import { ArrowRight, Loader2, AlertCircle } from "lucide-react";
+import { useNotas } from "@/hooks";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
@@ -29,7 +29,7 @@ const formatCurrency = (value: number) => {
 
 export const RecentNotesTable = () => {
   const navigate = useNavigate();
-  const { recentNotas } = useDashboard();
+  const { recentNotas, loading, error } = useNotas();
 
   return (
     <Card className="h-full">
@@ -40,48 +40,60 @@ export const RecentNotesTable = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">#ID</TableHead>
-              <TableHead>Empresa</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Valor</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {recentNotas.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            <span className="ml-2 text-muted-foreground">Carregando...</span>
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center py-8 text-destructive">
+            <AlertCircle className="h-5 w-5 mr-2" />
+            <span>{error}</span>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={4} className="text-center">
-                  Nenhuma nota fiscal emitida ainda.
-                </TableCell>
+                <TableHead className="w-[100px]">#ID</TableHead>
+                <TableHead>Empresa</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Valor</TableHead>
               </TableRow>
-            ) : (
-              recentNotas.map((nota) => (
-                <TableRow key={nota.id}>
-                  <TableCell className="font-medium">
-                    {`#${nota.id.substring(0, 6)}`}
-                  </TableCell>
-                  <TableCell>{nota.razao_social}</TableCell>
-                  <TableCell>
-                    <Badge
-                      className={
-                        nota.status === "Emitida"
-                          ? "bg-green-700 hover:bg-green-700"
-                          : "bg-yellow-700 hover:bg-yellow-700"
-                      }
-                    >
-                      {nota.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {formatCurrency(nota.valor_nota)}
+            </TableHeader>
+            <TableBody>
+              {recentNotas.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center">
+                    Nenhuma nota fiscal emitida ainda.
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                recentNotas.map((nota) => (
+                  <TableRow key={nota.id}>
+                    <TableCell className="font-medium">
+                      {`#${nota.id.substring(0, 6)}`}
+                    </TableCell>
+                    <TableCell>{nota.razao_social}</TableCell>
+                    <TableCell>
+                      <Badge
+                        className={
+                          nota.status === "Emitida"
+                            ? "bg-green-700 hover:bg-green-700"
+                            : "bg-yellow-700 hover:bg-yellow-700"
+                        }
+                      >
+                        {nota.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {formatCurrency(nota.valor_nota)}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
       <CardFooter className="justify-end">
         <Button 

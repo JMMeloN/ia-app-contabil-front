@@ -1,14 +1,15 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import AppRoutes from "./presentation/routes/app-routes";
-import { AuthInitializer } from "./components/shared/AuthInitializer";
+import { DevRoleSwitcher } from "./presentation/components/dev-role-switcher";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
-    <AuthInitializer>
-      <Router>
-        <AppRoutes />
-      </Router>
-    </AuthInitializer>
+    <Router>
+      <AppRoutes />
+      <DevRoleSwitcher />
+      <Toaster />
+    </Router>
   );
 }
 

@@ -1,7 +1,5 @@
-import { User } from "firebase/auth";
-
 export interface AuthState {
-  user: User | null;
+  user: any | null;
   isLoading: boolean;
   isAuthenticated: boolean;
 }

@@ -1,14 +1,9 @@
-import { useRecoilValue } from 'recoil';
-import { authState, authLoadingState } from '@/store';
-
+// TODO: Implementar quando o backend estiver pronto
 export const useAuthRecoil = () => {
-  const authData = useRecoilValue(authState);
-  const isLoading = useRecoilValue(authLoadingState);
-
   return {
-    user: authData.user,
-    isLoading,
-    isAuthenticated: authData.isAuthenticated,
+    user: null,
+    isLoading: false,
+    isAuthenticated: false,
   };
 };
 

@@ -6,8 +6,8 @@ import { useAuth } from "@/hooks";
 export const DashboardHeader = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
-  const userName = user?.displayName || user?.email || "Usuário";
+
+  const userName = (user as any)?.displayName || (user as any)?.email || "Usuário";
 
   return (
     <div className="flex justify-between items-center">

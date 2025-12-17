@@ -8,14 +8,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Navbar } from "../../../components/layout/header";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider, db } from "../../../../firebase/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import icoGoogle from "../../../../assets/ico-google.png";
-import type { UserProfile } from "@/types/user";
+import { useState } from "react";
+import { HttpClientFactory } from "@/main/factories/http/http-client-factory";
 
 export function SignIn() {
   const navigate = useNavigate();
@@ -24,81 +20,50 @@ export function SignIn() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        console.log("Usuário autenticado detectado:", user.email);
-        
-        const userDocRef = doc(db, 'users', user.uid);
-        const userDoc = await getDoc(userDocRef);
-        
-        if (!userDoc.exists()) {
-          console.log("Criando perfil para novo usuário");
-          const userProfile: UserProfile = {
-            uid: user.uid,
-            email: user.email || '',
-            displayName: user.displayName || undefined,
-            role: 'cliente',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          };
-          
-          await setDoc(userDocRef, userProfile);
-          console.log("Perfil criado com sucesso");
-        }
-        
-        console.log("Navegando para /list-notes");
-        navigate("/list-notes");
-      }
-    });
+  const handleEmailLogin = async (e: any) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    return () => unsubscribe();
-  }, [navigate]);
-
-  const handleGoogleLogin = async () => {
     try {
-      setLoading(true);
-      setError('');
-      console.log("Iniciando login com Google via popup...");
-      
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log("Login com Google bem-sucedido:", result.user.email);
-      
-      const userDocRef = doc(db, 'users', result.user.uid);
-      const userDoc = await getDoc(userDocRef);
-      
-      if (!userDoc.exists()) {
-        console.log("Criando perfil para novo usuário do Google");
-        const userProfile: UserProfile = {
-          uid: result.user.uid,
-          email: result.user.email || '',
-          displayName: result.user.displayName || undefined,
-          role: 'cliente',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        
-        await setDoc(userDocRef, userProfile);
-        console.log("Perfil criado com sucesso");
+      const httpClient = HttpClientFactory.makePublicHttpClient();
+
+      const response = await httpClient.request({
+        url: 'http://localhost:3333/auth/login',
+        method: 'post',
+        body: {
+          email,
+          password,
+        },
+      });
+
+      if (response.statusCode === 200) {
+        const { accessToken, user } = response.body;
+
+        // Salvar token no localStorage
+        localStorage.setItem('access_token', accessToken);
+        localStorage.setItem('user_role', user.role);
+
+        // Redirecionar baseado no perfil
+        if (user.role === 'CLIENTE') {
+          navigate('/dashboard');
+        } else if (user.role === 'OPERACIONAL' || user.role === 'ADMIN') {
+          navigate('/operacional/dashboard');
+        } else {
+          navigate('/dashboard');
+        }
+      } else {
+        setError(response.body?.error || 'Email ou senha inválidos');
       }
-      
-      navigate("/list-notes");
-    } catch (error: any) {
-      console.error("Erro ao fazer login com Google:", error);
-      setError("Erro ao fazer login com Google: " + error.message);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Erro ao conectar com o servidor. Certifique-se que o backend está rodando na porta 3333.');
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleEmailLogin = async (e: any) => {
-    e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/list-notes");
-    } catch (error: any) {
-      console.error("Erro ao fazer login com email e senha: ", error.message);
-      setError('Erro ao fazer login com email e senha: ' + error.message);
-    }
+  const handleGoogleLogin = async () => {
+    setError('Login com Google ainda não implementado. Use email e senha.');
   };
 
   return (
@@ -147,10 +112,11 @@ export function SignIn() {
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full mt-6">Entrar</Button>
-              <Button className="w-full mt-4 gap-2" type="button" variant="outline" onClick={handleGoogleLogin} disabled={loading}>
-                <img className="w-4 h-4" src={icoGoogle} alt="Ícone do Google" />
-                {loading ? 'Redirecionando...' : 'Login com Google'}
+              <Button type="submit" className="w-full mt-6" disabled={loading}>
+                {loading ? 'Entrando...' : 'Entrar'}
+              </Button>
+              <Button className="w-full mt-4 gap-2" type="button" variant="outline" onClick={handleGoogleLogin}>
+                Login com Google (Em breve)
               </Button>
             </form>
           </CardContent>

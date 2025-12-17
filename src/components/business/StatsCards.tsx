@@ -11,7 +11,7 @@ import {
   CheckCircle,
   Clock,
 } from "lucide-react";
-import { useDashboard } from "@/hooks";
+import { useNotas } from "@/hooks";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
@@ -20,8 +20,38 @@ const formatCurrency = (value: number) => {
   }).format(value);
 };
 
+const SkeletonCard = () => (
+  <Card>
+    <CardHeader className="pb-2">
+      <CardDescription className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
+      <div className="h-8 bg-gray-200 rounded animate-pulse w-1/2 mt-2" />
+    </CardHeader>
+    <CardContent>
+      <div className="h-4 bg-gray-200 rounded animate-pulse w-full" />
+    </CardContent>
+  </Card>
+);
+
 export const StatsCards = () => {
-  const { summary } = useDashboard();
+  const { loading, emitidas, processando, totalValue, notas } = useNotas();
+
+  if (loading) {
+    return (
+      <div className="grid md:grid-cols-4 gap-4">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+      </div>
+    );
+  }
+
+  const summary = {
+    totalNotas: notas.length,
+    notasEmitidas: emitidas,
+    notasProcessando: processando,
+    totalValue: totalValue,
+  };
 
   return (
     <div className="grid md:grid-cols-4 gap-4">

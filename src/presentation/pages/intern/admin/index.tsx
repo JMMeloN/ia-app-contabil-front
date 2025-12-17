@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebase';
+import { useState } from 'react';
 import type { UserProfile, UserRole } from '@/types/user';
 import {
   Card,
@@ -27,6 +25,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Shield, Users, RefreshCw } from 'lucide-react';
+import { toast } from 'sonner';
 
 const roleColors: Record<UserRole, string> = {
   admin: 'bg-purple-500',
@@ -41,52 +40,23 @@ const roleLabels: Record<UserRole, string> = {
 };
 
 export function AdminPanel() {
-  const [users, setUsers] = useState<UserProfile[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [users] = useState<UserProfile[]>([]);
+  const [loading] = useState(false);
   const [updating, setUpdating] = useState<string | null>(null);
 
   const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      const usersSnapshot = await getDocs(collection(db, 'users'));
-      const usersData = usersSnapshot.docs.map(doc => ({
-        ...doc.data(),
-      })) as UserProfile[];
-      
-      usersData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      setUsers(usersData);
-    } catch (error) {
-      console.error('Erro ao buscar usuários:', error);
-    } finally {
-      setLoading(false);
-    }
+    // TODO: Implementar quando o backend estiver pronto
+    console.log('Backend ainda não implementado');
   };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   const handleRoleChange = async (userId: string, newRole: UserRole) => {
     setUpdating(userId);
-    try {
-      await updateDoc(doc(db, 'users', userId), {
-        role: newRole,
-        updatedAt: new Date().toISOString(),
-      });
-
-      setUsers(prev => prev.map(user => 
-        user.uid === userId 
-          ? { ...user, role: newRole, updatedAt: new Date().toISOString() }
-          : user
-      ));
-
-      console.log(`Role atualizado para ${newRole} do usuário ${userId}`);
-    } catch (error) {
-      console.error('Erro ao atualizar role:', error);
-      alert('Erro ao atualizar permissão do usuário');
-    } finally {
-      setUpdating(null);
-    }
+    // TODO: Implementar quando o backend estiver pronto
+    console.log(`Tentando alterar role do usuário ${userId} para ${newRole}`);
+    toast.info('Funcionalidade em desenvolvimento', {
+      description: 'Esta função estará disponível em breve com a integração do backend.',
+    });
+    setUpdating(null);
   };
 
   return (

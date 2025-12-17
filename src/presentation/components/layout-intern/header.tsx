@@ -3,21 +3,13 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import logo from "../../../assets/logotipo-mono.png";
 import logoWhite from "../../../assets/logo-white.png";
 import { Button } from "@/components/ui/button";
-import { auth } from "@/firebase/firebase";
-import { signOut } from "firebase/auth";
 import { LogOut } from "lucide-react";
 
 export function HeaderIntern() {
 
   const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        window.location.href = "/sign-in";
-      })
-      .catch((error) => {
-        console.error("Erro ao fazer logout: ", error);
-        window.location.href = "/sign-in";
-      });
+    // TODO: Implementar logout quando o backend estiver pronto
+    window.location.href = "/sign-in";
   };
 
   return (
@@ -42,12 +34,10 @@ export function HeaderIntern() {
           App Contabil
         </a>
       </div>
-      {auth.currentUser && (
-        <Button className="absolute right-4 top-4 " size="sm" variant="outline" onClick={handleLogout}>
-         <LogOut />
-         Sair
-        </Button>
-      )}
+      <Button className="absolute right-4 top-4 " size="sm" variant="outline" onClick={handleLogout}>
+        <LogOut />
+        Sair
+      </Button>
     </div>
   );
 }
