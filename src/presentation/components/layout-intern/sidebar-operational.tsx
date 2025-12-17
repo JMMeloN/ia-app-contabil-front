@@ -12,38 +12,66 @@ import {
 } from 'lucide-react';
 import { OPERATIONAL_ROUTES } from '@/presentation/routes/route-paths';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { HttpClientFactory } from '@/main/factories/http/http-client-factory';
 import logo from '@/assets/logotipo-mono.png';
 import logoWhite from '@/assets/logo-white.png';
-
-const menuItems = [
-  {
-    title: 'Dashboard',
-    icon: LayoutDashboard,
-    path: OPERATIONAL_ROUTES.DASHBOARD,
-  },
-  {
-    title: 'Todas Solicitações',
-    icon: FileText,
-    path: OPERATIONAL_ROUTES.ALL_REQUESTS,
-  },
-  {
-    title: 'Pendentes',
-    icon: Clock,
-    path: OPERATIONAL_ROUTES.PENDING_REQUESTS,
-    badge: '12', // Pode ser dinâmico depois
-  },
-  {
-    title: 'Processadas',
-    icon: CheckCircle,
-    path: OPERATIONAL_ROUTES.PROCESSED_REQUESTS,
-  },
-];
 
 export function SidebarOperational() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState<number>(0);
+
+  useEffect(() => {
+    fetchPendingCount();
+    // Atualizar a cada 30 segundos
+    const interval = setInterval(fetchPendingCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchPendingCount = async () => {
+    try {
+      const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
+      const response = await httpClient.request({
+        url: '/requests?status=PENDENTE',
+        method: 'get',
+      });
+
+      if (response.statusCode === 200) {
+        const pendentes = response.body.filter(
+          (req: any) => req.status === 'PENDENTE'
+        );
+        setPendingCount(pendentes.length);
+      }
+    } catch (error) {
+      // Silenciar erro para não atrapalhar UI
+    }
+  };
+
+  const menuItems = [
+    {
+      title: 'Dashboard',
+      icon: LayoutDashboard,
+      path: OPERATIONAL_ROUTES.DASHBOARD,
+    },
+    {
+      title: 'Todas Solicitações',
+      icon: FileText,
+      path: OPERATIONAL_ROUTES.ALL_REQUESTS,
+    },
+    {
+      title: 'Pendentes',
+      icon: Clock,
+      path: OPERATIONAL_ROUTES.PENDING_REQUESTS,
+      badge: pendingCount > 0 ? pendingCount.toString() : undefined,
+    },
+    {
+      title: 'Processadas',
+      icon: CheckCircle,
+      path: OPERATIONAL_ROUTES.PROCESSED_REQUESTS,
+    },
+  ];
 
   const handleLogout = () => {
     // Limpar dados do localStorage
