@@ -1,16 +1,5 @@
-const envBase = import.meta.env.VITE_API_URL;
-const inferredBase = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3333';
-
-if (!envBase && import.meta.env.MODE === 'production') {
-  // In production we want the deploy to explicitly set `VITE_API_URL`.
-  // This helps avoid the app pointing to localhost after deployment.
-  // Keep a console warning so the issue is visible in browser console/logs.
-  // eslint-disable-next-line no-console
-  console.warn('[API_CONFIG] VITE_API_URL is not set. Falling back to window.location.origin. Set VITE_API_URL in your hosting env.');
-}
-
 export const API_CONFIG = {
-  baseURL: envBase || inferredBase,
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3333',
   timeout: 30000,
 } as const;
 
