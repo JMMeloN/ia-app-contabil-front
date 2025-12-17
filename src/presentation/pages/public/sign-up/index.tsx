@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { HttpClientFactory } from "@/main/factories/http/http-client-factory";
 import { toast } from "sonner";
+import { API_ENDPOINTS } from '@/main/config/api-config';
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export function SignUp() {
       const httpClient = HttpClientFactory.makePublicHttpClient();
 
       const response = await httpClient.request({
-        url: 'http://localhost:3333/auth/register',
+        url: API_ENDPOINTS.auth.register,
         method: 'post',
         body: {
           name,

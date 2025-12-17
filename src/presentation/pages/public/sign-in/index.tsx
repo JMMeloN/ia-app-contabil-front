@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { HttpClientFactory } from "@/main/factories/http/http-client-factory";
+import { API_ENDPOINTS } from '@/main/config/api-config';
 
 export function SignIn() {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export function SignIn() {
       const httpClient = HttpClientFactory.makePublicHttpClient();
 
       const response = await httpClient.request({
-        url: 'http://localhost:3333/auth/login',
+        url: API_ENDPOINTS.auth.login,
         method: 'post',
         body: {
           email,
@@ -56,7 +57,7 @@ export function SignIn() {
         setError(response.body?.error || 'Email ou senha inválidos');
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Erro ao conectar com o servidor. Certifique-se que o backend está rodando na porta 3333.');
+      setError(err.response?.data?.error || 'Erro ao conectar com o servidor.');
     } finally {
       setLoading(false);
     }
