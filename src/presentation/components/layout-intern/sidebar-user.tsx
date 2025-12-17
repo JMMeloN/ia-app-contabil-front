@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import {
   Home,
@@ -8,6 +8,7 @@ import {
   User,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react';
 import { USER_ROUTES } from '@/presentation/routes/route-paths';
 import { Button } from '@/components/ui/button';
@@ -45,7 +46,18 @@ const menuItems = [
 
 export function SidebarUser() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    // Limpar dados do localStorage
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('mock_user_role');
+
+    // Redirecionar para login
+    navigate('/sign-in');
+  };
 
   return (
     <>
@@ -118,7 +130,7 @@ export function SidebarUser() {
         </nav>
 
         {/* User Info */}
-        <div className="border-t p-4">
+        <div className="border-t p-4 space-y-3">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
               <User className="h-5 w-5 text-primary" />
@@ -130,6 +142,15 @@ export function SidebarUser() {
               </p>
             </div>
           </div>
+
+          <Button
+            variant="outline"
+            className="w-full justify-start"
+            onClick={handleLogout}
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Sair
+          </Button>
         </div>
       </aside>
     </>
