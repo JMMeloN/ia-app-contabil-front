@@ -74,10 +74,16 @@ export function ProcessedRequests() {
       return;
     }
 
+    // Verificar se a URL já é completa (Cloudinary) ou relativa (filesystem)
+    const fileUrl = arquivoUrl.startsWith('http')
+      ? arquivoUrl
+      : `${API_CONFIG.baseURL}${arquivoUrl}`;
+
     // Fazer download real
     const link = document.createElement('a');
-    link.href = `${API_CONFIG.baseURL}${arquivoUrl}`;
+    link.href = fileUrl;
     link.download = arquivoUrl.split('/').pop() || 'nota.pdf';
+    link.target = '_blank'; // Abrir em nova aba
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
