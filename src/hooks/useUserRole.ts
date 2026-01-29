@@ -10,7 +10,7 @@ export function useUserRole() {
   // Se não tiver role do login, usa o mock
   const savedMockRole = (typeof window !== 'undefined'
     ? localStorage.getItem('mock_user_role')
-    : null) as UserRole | null;
+    : null) as string | null;
 
   // Mapear roles do backend para o frontend
   let role: UserRole = 'cliente';
@@ -19,7 +19,7 @@ export function useUserRole() {
     else if (userRole === 'OPERATIONAL' || userRole === 'OPERACIONAL') role = 'operacional';
     else if (userRole === 'ADMIN') role = 'admin';
   } else if (savedMockRole && ['cliente', 'operacional', 'admin'].includes(savedMockRole)) {
-    role = savedMockRole;
+    role = (savedMockRole as UserRole);
   }
 
   // Debug - mostrar qual role está sendo usado

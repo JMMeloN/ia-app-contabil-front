@@ -15,9 +15,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Send } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { ArrowLeft, Send, Zap, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { USER_ROUTES } from '@/presentation/routes/route-paths';
 import { useForm } from 'react-hook-form';
@@ -34,6 +36,8 @@ export function NewRequest() {
   const [companies, setCompanies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [valorDisplay, setValorDisplay] = useState('');
+  const [selectedCompany, setSelectedCompany] = useState<any>(null);
+  const [emissaoAutomatica, setEmissaoAutomatica] = useState(false);
 
   const form = useForm<RequestFormData>({
     resolver: zodResolver(requestSchema),
@@ -86,13 +90,20 @@ export function NewRequest() {
           valor: valorNumerico,
           dataEmissao: data.dataEmissao,
           observacoes: data.observacoes,
+          emissaoAutomatica: emissaoAutomatica,
         },
       });
 
       if (response.statusCode === 201) {
-        toast.success('Solicitação enviada com sucesso!', {
-          description: 'A nota fiscal será processada em breve.',
-        });
+        if (emissaoAutomatica) {
+          toast.success('Nota fiscal emitida automaticamente!', {
+            description: 'Você receberá um email com o PDF da nota em instantes.',
+          });
+        } else {
+          toast.success('Solicitação enviada com sucesso!', {
+            description: 'A nota fiscal será processada em breve.',
+          });
+        }
         setTimeout(() => navigate(USER_ROUTES.MY_REQUESTS), 1500);
       } else {
         toast.error('Erro ao criar solicitação', {
@@ -142,7 +153,13 @@ export function NewRequest() {
                   <FormItem>
                     <FormLabel>Empresa *</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        const company = companies.find((c) => c.id === value);
+                        setSelectedCompany(company);
+                        // Resetar emissão automática ao trocar empresa
+                        setEmissaoAutomatica(false);
+                      }}
                       defaultValue={field.value}
                       disabled={form.formState.isSubmitting}
                     >
@@ -185,6 +202,51 @@ export function NewRequest() {
                   </FormItem>
                 )}
               />
+
+              {/* Como deseja emitir? - Só aparece se a empresa suportar emissão automática */}
+              {selectedCompany && selectedCompany.nfeioCompanyId && (
+                <div className="space-y-3">
+                  <div>
+                    <h3 className="text-sm font-medium">Como deseja emitir a nota? *</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Sua empresa está configurada para emissão automática
+                    </p>
+                  </div>
+
+                  <RadioGroup
+                    value={emissaoAutomatica ? 'automatica' : 'manual'}
+                    onValueChange={(value) => setEmissaoAutomatica(value === 'automatica')}
+                  >
+                    <div className="flex items-start space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent"
+                         onClick={() => setEmissaoAutomatica(true)}>
+                      <RadioGroupItem value="automatica" id="automatica" />
+                      <div className="flex-1">
+                        <label htmlFor="automatica" className="text-sm font-medium cursor-pointer flex items-center gap-2">
+                          <Zap className="h-4 w-4 text-green-600" />
+                          Eu emito (Automático)
+                        </label>
+                        <p className="text-sm text-muted-foreground">
+                          Nota fiscal será emitida instantaneamente via NFe.io
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent"
+                         onClick={() => setEmissaoAutomatica(false)}>
+                      <RadioGroupItem value="manual" id="manual" />
+                      <div className="flex-1">
+                        <label htmlFor="manual" className="text-sm font-medium cursor-pointer flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-blue-600" />
+                          IAContabil emite
+                        </label>
+                        <p className="text-sm text-muted-foreground">
+                          Solicitação será processada manualmente pela equipe
+                        </p>
+                      </div>
+                    </div>
+                  </RadioGroup>
+                </div>
+              )}
 
               {/* Valor */}
               <FormField

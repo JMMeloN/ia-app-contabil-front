@@ -21,6 +21,7 @@ import { OperationalDashboard } from "../pages/operational/dashboard";
 import { AllRequests } from "../pages/operational/all-requests";
 import { PendingRequests } from "../pages/operational/pending-requests";
 import { ProcessedRequests } from "../pages/operational/processed-requests";
+import { ManageCompanies } from "../pages/operational/manage-companies";
 
 const AppRoutes = () => {
   return (
@@ -130,6 +131,16 @@ const AppRoutes = () => {
           <RoleBasedRoute allowedRoles={['operacional', 'admin']}>
             <LayoutOperational>
               <ProcessedRequests />
+            </LayoutOperational>
+          </RoleBasedRoute>
+        }
+      />
+      <Route
+        path={OPERATIONAL_ROUTES.MANAGE_COMPANIES}
+        element={
+          <RoleBasedRoute allowedRoles={['operacional', 'admin']}>
+            <LayoutOperational>
+              <ManageCompanies />
             </LayoutOperational>
           </RoleBasedRoute>
         }

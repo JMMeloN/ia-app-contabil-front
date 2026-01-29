@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   LogOut,
+  Building2,
 } from 'lucide-react';
 import { OPERATIONAL_ROUTES } from '@/presentation/routes/route-paths';
 import { Button } from '@/components/ui/button';
@@ -70,6 +71,11 @@ export function SidebarOperational() {
       title: 'Processadas',
       icon: CheckCircle,
       path: OPERATIONAL_ROUTES.PROCESSED_REQUESTS,
+    },
+    {
+      title: 'Gerenciar Empresas',
+      icon: Building2,
+      path: OPERATIONAL_ROUTES.MANAGE_COMPANIES,
     },
   ];
 

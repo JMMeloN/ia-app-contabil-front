@@ -26,6 +26,7 @@ export const OPERATIONAL_ROUTES = {
   ALL_REQUESTS: '/operacional/solicitacoes',
   PENDING_REQUESTS: '/operacional/pendentes',
   PROCESSED_REQUESTS: '/operacional/processadas',
+  MANAGE_COMPANIES: '/operacional/empresas',
 } as const;
 
 // Rotas do Admin
