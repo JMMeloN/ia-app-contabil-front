@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,7 +21,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -24,7 +29,10 @@ import { useNavigate } from 'react-router-dom';
 import { USER_ROUTES } from '@/presentation/routes/route-paths';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { requestSchema, type RequestFormData } from '@/lib/validations/request-schema';
+import {
+  requestSchema,
+  type RequestFormData,
+} from '@/lib/validations/request-schema';
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 import { HttpClientFactory } from '@/main/factories/http/http-client-factory';
@@ -78,9 +86,10 @@ export function NewRequest() {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
 
       // Converte o valor para número se estiver como string
-      const valorNumerico = typeof data.valor === 'string'
-        ? currencyToNumber(data.valor)
-        : data.valor;
+      const valorNumerico =
+        typeof data.valor === 'string'
+          ? currencyToNumber(data.valor)
+          : data.valor;
 
       const response = await httpClient.request({
         url: API_ENDPOINTS.requests.base,
@@ -97,7 +106,8 @@ export function NewRequest() {
       if (response.statusCode === 201) {
         if (emissaoAutomatica) {
           toast.success('Nota fiscal emitida automaticamente!', {
-            description: 'Você receberá um email com o PDF da nota em instantes.',
+            description:
+              'Você receberá um email com o PDF da nota em instantes.',
           });
         } else {
           toast.success('Solicitação enviada com sucesso!', {
@@ -112,7 +122,8 @@ export function NewRequest() {
       }
     } catch (error: any) {
       toast.error('Erro ao criar solicitação', {
-        description: error.response?.data?.error || 'Erro ao conectar com o servidor.',
+        description:
+          error.response?.data?.error || 'Erro ao conectar com o servidor.',
       });
     }
   };
@@ -207,7 +218,9 @@ export function NewRequest() {
               {selectedCompany && selectedCompany.nfeioCompanyId && (
                 <div className="space-y-3">
                   <div>
-                    <h3 className="text-sm font-medium">Como deseja emitir a nota? *</h3>
+                    <h3 className="text-sm font-medium">
+                      Como deseja emitir a nota? *
+                    </h3>
                     <p className="text-sm text-muted-foreground">
                       Sua empresa está configurada para emissão automática
                     </p>
@@ -215,13 +228,20 @@ export function NewRequest() {
 
                   <RadioGroup
                     value={emissaoAutomatica ? 'automatica' : 'manual'}
-                    onValueChange={(value) => setEmissaoAutomatica(value === 'automatica')}
+                    onValueChange={(value) =>
+                      setEmissaoAutomatica(value === 'automatica')
+                    }
                   >
-                    <div className="flex items-start space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent"
-                         onClick={() => setEmissaoAutomatica(true)}>
+                    <div
+                      className="flex items-start space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent"
+                      onClick={() => setEmissaoAutomatica(true)}
+                    >
                       <RadioGroupItem value="automatica" id="automatica" />
                       <div className="flex-1">
-                        <label htmlFor="automatica" className="text-sm font-medium cursor-pointer flex items-center gap-2">
+                        <label
+                          htmlFor="automatica"
+                          className="text-sm font-medium cursor-pointer flex items-center gap-2"
+                        >
                           <Zap className="h-4 w-4 text-green-600" />
                           Eu emito (Automático)
                         </label>
@@ -231,11 +251,16 @@ export function NewRequest() {
                       </div>
                     </div>
 
-                    <div className="flex items-start space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent"
-                         onClick={() => setEmissaoAutomatica(false)}>
+                    <div
+                      className="flex items-start space-x-3 border rounded-lg p-4 cursor-pointer hover:bg-accent"
+                      onClick={() => setEmissaoAutomatica(false)}
+                    >
                       <RadioGroupItem value="manual" id="manual" />
                       <div className="flex-1">
-                        <label htmlFor="manual" className="text-sm font-medium cursor-pointer flex items-center gap-2">
+                        <label
+                          htmlFor="manual"
+                          className="text-sm font-medium cursor-pointer flex items-center gap-2"
+                        >
                           <Clock className="h-4 w-4 text-blue-600" />
                           IAContabil emite
                         </label>
@@ -330,7 +355,9 @@ export function NewRequest() {
                 </Button>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   <Send className="mr-2 h-4 w-4" />
-                  {form.formState.isSubmitting ? 'Enviando...' : 'Enviar Solicitação'}
+                  {form.formState.isSubmitting
+                    ? 'Enviando...'
+                    : 'Enviar Solicitação'}
                 </Button>
               </div>
             </form>
