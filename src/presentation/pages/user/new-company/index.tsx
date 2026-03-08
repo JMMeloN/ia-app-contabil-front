@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ArrowLeft, Building2, FileKey, ShieldCheck, ClipboardCheck, Settings2, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Building2, FileKey, ShieldCheck, ClipboardCheck, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { USER_ROUTES } from '@/presentation/routes/route-paths';
 import { useForm } from 'react-hook-form';
@@ -28,7 +28,6 @@ import { HttpClientFactory } from '@/main/factories/http/http-client-factory';
 import { API_ENDPOINTS } from '@/main/config/api-config';
 import { phoneMask, cnpjMask, cepMask } from '@/lib/utils/masks';
 import { useState } from 'react';
-import { Separator } from '@/components/ui/separator';
 
 const BRAZILIAN_STATES = [
   { value: 'AC', label: 'Acre' }, { value: 'AL', label: 'Alagoas' }, { value: 'AP', label: 'Amapá' },

@@ -78,7 +78,7 @@ export function MyRequests() {
     try {
       const httpClient = HttpClientFactory.makeAuthenticatedHttpClient();
       const response = await httpClient.request({
-        url: `/requests/${requestToCancel}`,
+        url: `/requests/${requestToCancel}/cancel`,
         method: 'delete',
       });
 
@@ -215,7 +215,9 @@ export function MyRequests() {
                               <Download className="h-4 w-4" />
                             </Button>
                           )}
-                        {request.status === 'PENDENTE' && (
+                        {(request.status === 'PENDENTE' ||
+                          (request.status === 'PROCESSADA' &&
+                            !!request.nfeioInvoiceId)) && (
                           <Button
                             size="sm"
                             variant="destructive"
