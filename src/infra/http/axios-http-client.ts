@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import type { HttpClient, HttpRequest, HttpResponse } from '@/data/protocols/http/http-client';
+import { clearAuthStorage, isJwtExpired } from '@/infra/auth/jwt-token';
 
 export class AxiosHttpClient implements HttpClient {
   private axiosInstance: AxiosInstance;
@@ -45,14 +46,22 @@ export class AxiosHttpClient implements HttpClient {
   }
 
   private getAuthToken(): string | null {
-    // TODO: Implementar quando tiver autenticação
-    return localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token');
+    if (!token) return null;
+
+    if (isJwtExpired(token)) {
+      this.handleUnauthorized();
+      return null;
+    }
+
+    return token;
   }
 
   private handleUnauthorized(): void {
-    // TODO: Implementar logout e redirect para login
-    localStorage.removeItem('access_token');
-    window.location.href = '/sign-in';
+    clearAuthStorage();
+    if (window.location.pathname !== '/sign-in') {
+      window.location.href = '/sign-in';
+    }
   }
 
   async request(data: HttpRequest): Promise<HttpResponse> {

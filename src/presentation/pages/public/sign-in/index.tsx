@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { HttpClientFactory } from "@/main/factories/http/http-client-factory";
 import { API_ENDPOINTS } from '@/main/config/api-config';
+import { clearAuthStorage, isJwtExpired } from '@/infra/auth/jwt-token';
 
 export function SignIn() {
   const navigate = useNavigate();
@@ -40,8 +41,11 @@ export function SignIn() {
 
       if (response.statusCode === 200) {
         const { accessToken, user } = response.body;
+        if (!accessToken || isJwtExpired(accessToken)) {
+          throw new Error('Token de autenticação inválido');
+        }
 
-        // Salvar token no localStorage
+        clearAuthStorage();
         localStorage.setItem('access_token', accessToken);
         localStorage.setItem('user_role', user.role);
 
