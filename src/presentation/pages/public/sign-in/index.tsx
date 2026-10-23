@@ -14,6 +14,7 @@ import { useState } from "react";
 import { HttpClientFactory } from "@/main/factories/http/http-client-factory";
 import { API_ENDPOINTS } from '@/main/config/api-config';
 import { clearAuthStorage, isJwtExpired } from '@/infra/auth/jwt-token';
+import { saveSession } from '@/infra/auth/auth-session';
 
 export function SignIn() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export function SignIn() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleEmailLogin = async (e: any) => {
+  const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -40,14 +41,13 @@ export function SignIn() {
       });
 
       if (response.statusCode === 200) {
-        const { accessToken, user } = response.body;
+        const { accessToken, refreshToken, user } = response.body;
         if (!accessToken || isJwtExpired(accessToken)) {
           throw new Error('Token de autenticação inválido');
         }
 
         clearAuthStorage();
-        localStorage.setItem('access_token', accessToken);
-        localStorage.setItem('user_role', user.role);
+        saveSession({ accessToken, refreshToken, role: user.role });
 
         // Redirecionar baseado no perfil
         if (user.role === 'USER' || user.role === 'CLIENTE') {
@@ -60,8 +60,9 @@ export function SignIn() {
       } else {
         setError(response.body?.error || 'Email ou senha inválidos');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Erro ao conectar com o servidor.');
+    } catch (err) {
+      const apiError = (err as { response?: { data?: { error?: string } } }).response?.data?.error;
+      setError(apiError || 'Erro ao conectar com o servidor.');
     } finally {
       setLoading(false);
     }

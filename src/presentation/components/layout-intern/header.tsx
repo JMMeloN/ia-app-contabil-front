@@ -4,11 +4,13 @@ import logo from "../../../assets/logotipo-mono.png";
 import logoWhite from "../../../assets/logo-white.png";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import { logoutSession } from "@/infra/auth/auth-session";
 
 export function HeaderIntern() {
 
-  const handleLogout = () => {
-    // TODO: Implementar logout quando o backend estiver pronto
+  const handleLogout = async () => {
+    // Revoke the refresh session on the API and clear local storage
+    await logoutSession();
     window.location.href = "/sign-in";
   };
 

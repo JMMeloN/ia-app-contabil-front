@@ -1,6 +1,9 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { HttpClient, HttpRequest, HttpResponse } from '@/data/protocols/http/http-client';
 import { clearAuthStorage, isJwtExpired } from '@/infra/auth/jwt-token';
+import { getAccessToken, getRefreshToken, refreshAccessToken } from '@/infra/auth/auth-session';
+
+type RetryableConfig = InternalAxiosRequestConfig & { _retried?: boolean };
 
 export class AxiosHttpClient implements HttpClient {
   private axiosInstance: AxiosInstance;
@@ -18,11 +21,11 @@ export class AxiosHttpClient implements HttpClient {
   }
 
   private setupInterceptors(): void {
-    // Request interceptor
+    // Request interceptor: attach a valid access token, renewing it first if expired.
     this.axiosInstance.interceptors.request.use(
-      (config) => {
+      async (config) => {
         if (this.authRequired) {
-          const token = this.getAuthToken();
+          const token = await this.getValidAccessToken();
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
           }
@@ -32,29 +35,46 @@ export class AxiosHttpClient implements HttpClient {
       (error) => Promise.reject(error)
     );
 
-    // Response interceptor
+    // Response interceptor: on 401, refresh once and retry the original request.
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       async (error: AxiosError) => {
-        if (error.response?.status === 401 && this.authRequired) {
-          // Token expirado - pode implementar refresh token aqui
+        const config = error.config as RetryableConfig | undefined;
+
+        if (error.response?.status === 401 && this.authRequired && config && !config._retried) {
+          config._retried = true;
+
+          const newToken = await refreshAccessToken();
+          if (newToken) {
+            config.headers.Authorization = `Bearer ${newToken}`;
+            return this.axiosInstance.request(config);
+          }
+
           this.handleUnauthorized();
         }
+
         return Promise.reject(error);
       }
     );
   }
 
-  private getAuthToken(): string | null {
-    const token = localStorage.getItem('access_token');
-    if (!token) return null;
+  private async getValidAccessToken(): Promise<string | null> {
+    const token = getAccessToken();
 
-    if (isJwtExpired(token)) {
-      this.handleUnauthorized();
-      return null;
+    if (token && !isJwtExpired(token)) {
+      return token;
     }
 
-    return token;
+    // Access token missing or expired: try the refresh token before giving up.
+    if (getRefreshToken()) {
+      const renewed = await refreshAccessToken();
+      if (renewed) {
+        return renewed;
+      }
+    }
+
+    this.handleUnauthorized();
+    return null;
   }
 
   private handleUnauthorized(): void {

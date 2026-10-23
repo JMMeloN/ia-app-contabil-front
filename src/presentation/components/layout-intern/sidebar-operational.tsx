@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { logoutSession } from '@/infra/auth/auth-session';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
@@ -41,7 +42,7 @@ export function SidebarOperational() {
 
       if (response.statusCode === 200) {
         const pendentes = response.body.filter(
-          (req: any) => req.status === 'PENDENTE'
+          (req: { status: string }) => req.status === 'PENDENTE'
         );
         setPendingCount(pendentes.length);
       }
@@ -79,11 +80,9 @@ export function SidebarOperational() {
     },
   ];
 
-  const handleLogout = () => {
-    // Limpar dados do localStorage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user_role');
-    localStorage.removeItem('mock_user_role');
+  const handleLogout = async () => {
+    // Revoke the refresh session on the API and clear local storage
+    await logoutSession();
 
     // Redirecionar para login
     navigate('/sign-in');

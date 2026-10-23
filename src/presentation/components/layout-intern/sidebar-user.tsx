@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { logoutSession } from '@/infra/auth/auth-session';
 import { cn } from '@/lib/utils';
 import {
   Home,
@@ -49,11 +50,9 @@ export function SidebarUser() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    // Limpar dados do localStorage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user_role');
-    localStorage.removeItem('mock_user_role');
+  const handleLogout = async () => {
+    // Revoke the refresh session on the API and clear local storage
+    await logoutSession();
 
     // Redirecionar para login
     navigate('/sign-in');
